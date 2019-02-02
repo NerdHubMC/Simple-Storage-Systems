@@ -1,0 +1,17 @@
+{
+  "id": "simplestoragesystems",
+  "name": "Simple Storage Systems",
+  "description": "A storage system mod for fabric",
+  "version": "1.0.0",
+  "side": "universal",
+  "initializers": [
+    "nerdhub.simplestoragesystems.SimpleStorageSystems"
+  ],
+  "requires": {
+    "fabric": "*"
+  },
+  "mixins": {
+    "client": "simplestoragesystems.client.json",
+    "common": "simplestoragesystems.common.json"
+  }
+}
