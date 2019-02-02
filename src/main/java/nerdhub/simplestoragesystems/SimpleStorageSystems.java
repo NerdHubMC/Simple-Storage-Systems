@@ -1,5 +1,9 @@
 package nerdhub.simplestoragesystems;
 
+import nerdhub.simplestoragesystems.registry.ModBlockEntities;
+import nerdhub.simplestoragesystems.registry.ModBlocks;
+import nerdhub.simplestoragesystems.registry.ModItems;
+import nerdhub.simplestoragesystems.registry.ModRecipes;
 import nerdhub.simplestoragesystems.utils.Config;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;
@@ -20,9 +24,15 @@ public class SimpleStorageSystems implements ModInitializer, ClientModInitialize
 
     @Override
     public void onInitialize() {
+        ModBlocks.registerBlocks();
+        ModItems.registerItems();
+        ModBlockEntities.registerBlockEntities();
+        ModBlockEntities.registerServerGUIs();
+        ModRecipes.registerRecipes();
     }
 
     @Override
     public void onInitializeClient() {
+        ModBlockEntities.registerClientGUIs();
     }
 }

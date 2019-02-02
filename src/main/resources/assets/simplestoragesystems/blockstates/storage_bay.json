@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "simplestoragesystems:block/storage_bay" },
+    "facing=south": { "model": "simplestoragesystems:block/storage_bay", "y": 180 },
+    "facing=west":  { "model": "simplestoragesystems:block/storage_bay", "y": 270 },
+    "facing=east":  { "model": "simplestoragesystems:block/storage_bay", "y": 90 }
+  }
+}

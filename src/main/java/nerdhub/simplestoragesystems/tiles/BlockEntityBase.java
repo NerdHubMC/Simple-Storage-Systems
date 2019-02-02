@@ -14,6 +14,10 @@ public abstract class BlockEntityBase extends BlockEntity implements Tickable, C
     }
 
     @Override
+    public void tick() {
+    }
+
+    @Override
     public void fromClientTag(CompoundTag tag) {
         this.fromTag(tag);
     }

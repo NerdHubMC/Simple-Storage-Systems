@@ -1,3 +1,4 @@
 {
-  "itemGroup.simplestoragesystems.simplestoragesystems" : "Simple Storage Systems"
+  "itemGroup.simplestoragesystems.simplestoragesystems" : "Simple Storage Systems",
+  "block.simplestoragesystems.storage_bay" : "Storage Bay"
 }
