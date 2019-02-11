@@ -2,13 +2,13 @@ package nerdhub.simplestoragesystems.blocks.components;
 
 import nerdhub.simplestoragesystems.SimpleStorageSystems;
 import nerdhub.simplestoragesystems.blocks.BlockWithEntityBase;
-import nerdhub.simplestoragesystems.registry.ModBlockEntities;
+import nerdhub.simplestoragesystems.client.gui.gui.GuiController;
 import nerdhub.simplestoragesystems.tiles.components.BlockEntityController;
-import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateFactory;
@@ -36,7 +36,7 @@ public class BlockController extends BlockWithEntityBase {
     @Override
     public boolean activate(BlockState blockState, World world, BlockPos blockPos, PlayerEntity player, Hand hand, BlockHitResult blockHitResult) {
         if(!world.isClient) {
-            ContainerProviderRegistry.INSTANCE.openContainer(ModBlockEntities.CONTROLLER_CONTAINER, player, buf -> buf.writeBlockPos(blockPos));
+            MinecraftClient.getInstance().openScreen(new GuiController((BlockEntityController) world.getBlockEntity(blockPos)));
         }
 
         return true;

@@ -1,13 +1,13 @@
 package nerdhub.simplestoragesystems.tiles;
 
-import net.fabricmc.fabric.block.entity.ClientSerializable;
+import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.network.packet.BlockEntityUpdateClientPacket;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
 
-public abstract class BlockEntityBase extends BlockEntity implements Tickable, ClientSerializable {
+public abstract class BlockEntityBase extends BlockEntity implements Tickable, BlockEntityClientSerializable {
 
     public BlockEntityBase(BlockEntityType<?> blockEntityType_1) {
         super(blockEntityType_1);

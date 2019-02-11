@@ -5,7 +5,7 @@ import nerdhub.simplestoragesystems.SimpleStorageSystems;
 import nerdhub.simplestoragesystems.client.gui.container.ContainerStorageBay;
 import nerdhub.simplestoragesystems.tiles.components.BlockEntityStorageBay;
 import net.minecraft.client.gui.ContainerScreen;
-import net.minecraft.text.StringTextComponent;
+import net.minecraft.text.TranslatableTextComponent;
 import net.minecraft.util.Identifier;
 
 public class GuiStorageBay extends ContainerScreen {
@@ -14,7 +14,7 @@ public class GuiStorageBay extends ContainerScreen {
     public BlockEntityStorageBay tile;
 
     public GuiStorageBay(BlockEntityStorageBay tile, ContainerStorageBay container) {
-        super(container, container.playerInventory, new StringTextComponent("Storage Bay"));
+        super(container, container.playerInventory, new TranslatableTextComponent("gui.simplestoragesystems.storage_bay"));
         this.tile = tile;
     }
 
@@ -32,8 +32,7 @@ public class GuiStorageBay extends ContainerScreen {
 
     @Override
     public void drawForeground(int int_1, int int_2) {
-        String string_1 = "Cell Storage Bay";
-        this.fontRenderer.draw(string_1, (float)(this.containerWidth / 2 - this.fontRenderer.getStringWidth(string_1) / 2), 6.0F, 4210752);
+        this.fontRenderer.draw(this.name.getFormattedText(), (float)(this.containerWidth / 2 - this.fontRenderer.getStringWidth(this.name.getFormattedText()) / 2), 6.0F, 4210752);
     }
 
     @Override

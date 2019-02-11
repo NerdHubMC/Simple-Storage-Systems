@@ -14,7 +14,7 @@ import net.minecraft.container.Slot;
 import net.minecraft.container.SlotActionType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.packet.CustomPayloadServerPacket;
-import net.minecraft.text.StringTextComponent;
+import net.minecraft.text.TranslatableTextComponent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 
@@ -29,7 +29,7 @@ public class GuiTerminal extends ContainerGuiBase {
     private TerminalViewHelper view;
 
     public GuiTerminal(BlockEntityTerminal tile, ContainerTerminal container) {
-        super(container, container.playerInventory, new StringTextComponent("Storage Terminal"));
+        super(container, container.playerInventory, new TranslatableTextComponent("gui.simplestoragesystems.terminal"));
         this.containerWidth = 194;
         this.containerHeight = 193;
         this.tile = tile;
@@ -67,8 +67,7 @@ public class GuiTerminal extends ContainerGuiBase {
 
     @Override
     public void drawForeground(int mouseX, int mouseY) {
-        String string_1 = "Terminal";
-        this.fontRenderer.draw(string_1, 8, 10, 4210752);
+        this.fontRenderer.draw(this.name.getFormattedText(), 8, 10, 4210752);
 
         int x = 8;
         int y = 26;
@@ -149,6 +148,8 @@ public class GuiTerminal extends ContainerGuiBase {
                         buf.writeBlockPos(tile.controllerPos);
                         buf.writeItemStack(stack);
                         MinecraftClient.getInstance().getNetworkHandler().getClientConnection().sendPacket(new CustomPayloadServerPacket(ModPackets.PACKET_STORE_STACK, buf));
+                        MinecraftClient.getInstance().player.inventory.setCursorStack(ItemStack.EMPTY);
+                        MinecraftClient.getInstance().player.containerPlayer.sendContentUpdates();
                     }else {
                     }
                 }
@@ -164,27 +165,6 @@ public class GuiTerminal extends ContainerGuiBase {
 
         return true;
     }
-
-    /**
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int int_1) {
-        if(getSlotUnderMouse(mouseX, mouseY) != null) {
-            ItemStack stack = MinecraftClient.getInstance().player.inventory.getCursorStack();
-            if(stack.isEmpty()) {
-
-            }else {
-                if(tile != null && tile.getControllerEntity().storeStack(stack, false)) {
-                    PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-                    buf.writeItemStack(stack);
-                    buf.writeBlockPos(tile.getPos());
-                    MinecraftClient.getInstance().getNetworkHandler().getClientConnection().sendPacket(new CustomPayloadServerPacket(ModPackets.PACKET_STORE_STACK, buf));
-                }
-            }
-        }
-
-        return super.mouseClicked(mouseX, mouseY, int_1);
-    }
-    */
 
     @Override
     public boolean mouseScrolled(double double_1) {
@@ -216,10 +196,6 @@ public class GuiTerminal extends ContainerGuiBase {
 
     public boolean isMouseOverSlot() {
         return slotNumber > 0;
-    }
-
-    public boolean isOverSlotArea(int mouseX, int mouseY) {
-        return inBounds(7, 25, 162, 18 * 4, mouseX, mouseY);
     }
 
     public int getSlotNumber() {

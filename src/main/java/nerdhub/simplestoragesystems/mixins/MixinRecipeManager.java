@@ -15,8 +15,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(RecipeManager.class)
 public abstract class MixinRecipeManager {
 
-    @Inject(method = "onResourceReload", at = @At("RETURN"))
-    public void onResourceReload(ResourceManager resourceManager_1, CallbackInfo ci) {
+    @Inject(method = "reloadResources", at = @At("RETURN"))
+    public void reloadResources(ResourceManager resourceManager_1, CallbackInfo ci) {
         for (RecipeGenerator.Output output : RecipeGenerator.recipes) {
             this.add(RecipeManager.deserialize(new Identifier(SimpleStorageSystems.MODID, output.name), output.recipe));
         }
