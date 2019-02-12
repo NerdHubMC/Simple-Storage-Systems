@@ -30,7 +30,7 @@ public class BlockEntityTerminal extends BlockEntityBase implements INetworkComp
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
-
+        tag.putBoolean("isLinked", isLinked);
         if(controllerPos != null) {
             tag.put("controllerPos", TagHelper.serializeBlockPos(controllerPos));
         }
@@ -60,7 +60,7 @@ public class BlockEntityTerminal extends BlockEntityBase implements INetworkComp
 
     @Override
     public BlockEntityController getControllerEntity() {
-        if(world.getBlockEntity(controllerPos) instanceof BlockEntityController) {
+        if(controllerPos != null && world.getBlockEntity(controllerPos) instanceof BlockEntityController) {
             return (BlockEntityController) world.getBlockEntity(controllerPos);
         }
 

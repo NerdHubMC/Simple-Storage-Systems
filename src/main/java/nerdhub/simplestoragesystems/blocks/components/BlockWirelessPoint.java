@@ -1,21 +1,17 @@
 package nerdhub.simplestoragesystems.blocks.components;
 
-import io.netty.buffer.Unpooled;
 import nerdhub.simplestoragesystems.SimpleStorageSystems;
 import nerdhub.simplestoragesystems.api.INetworkComponent;
 import nerdhub.simplestoragesystems.blocks.BlockWithEntityBase;
-import nerdhub.simplestoragesystems.network.ModPackets;
 import nerdhub.simplestoragesystems.tiles.components.BlockEntityWirelessPoint;
+import nerdhub.simplestoragesystems.utils.ComponentHelper;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.VerticalEntityPosition;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.server.network.packet.CustomPayloadServerPacket;
 import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.util.PacketByteBuf;
-import net.minecraft.util.TagHelper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -51,8 +47,10 @@ public class BlockWirelessPoint extends BlockWithEntityBase {
         if(point != null && point.getControllerPos() != null) {
             point.connectedComponents.clear();
             for (BlockPos entityPos : getAdjacentTiles(context.getWorld(), context.getBlockPos())) {
-                context.getWorld().sendPacket(new CustomPayloadServerPacket(ModPackets.PACKET_LINK_COMPONENTS, new PacketByteBuf(Unpooled.buffer()).writeBlockPos(point.getControllerPos()).writeCompoundTag(TagHelper.serializeBlockPos(entityPos))));
-                point.addComponent(entityPos);
+                if(context.getWorld().getBlockEntity(entityPos) instanceof INetworkComponent && point.getControllerPos() != null) {
+                    ComponentHelper.linkComponent(context.getWorld(), (INetworkComponent) context.getWorld().getBlockEntity(entityPos), point.getControllerPos(), true);
+                    point.addComponent(entityPos);
+                }
             }
         }
 
@@ -65,8 +63,10 @@ public class BlockWirelessPoint extends BlockWithEntityBase {
         point.connectedComponents.clear();
         if(point.getControllerPos() != null) {
             for (BlockPos entityPos : getAdjacentTiles(world, blockPos)) {
-                world.getWorld().sendPacket(new CustomPayloadServerPacket(ModPackets.PACKET_LINK_COMPONENTS, new PacketByteBuf(Unpooled.buffer()).writeBlockPos(point.getControllerPos()).writeCompoundTag(TagHelper.serializeBlockPos(entityPos))));
-                point.addComponent(entityPos);
+                if(world.getBlockEntity(entityPos) instanceof INetworkComponent && point.getControllerPos() != null) {
+                    ComponentHelper.linkComponent(world, (INetworkComponent) world.getBlockEntity(entityPos), point.getControllerPos(), true);
+                    point.addComponent(entityPos);
+                }
             }
         }
 
@@ -87,7 +87,7 @@ public class BlockWirelessPoint extends BlockWithEntityBase {
         List<BlockPos> list = new ArrayList<>();
         for (Direction direction : Direction.values()) {
             BlockEntity entity = world.getBlockEntity(pos.offset(direction));
-            if (entity != null && entity instanceof INetworkComponent && ((INetworkComponent) entity).getComponentType().isLinkable()) {
+            if (entity instanceof INetworkComponent && ((INetworkComponent) entity).getComponentType().isLinkable()) {
                 list.add(pos.offset(direction));
             }
         }
@@ -99,7 +99,9 @@ public class BlockWirelessPoint extends BlockWithEntityBase {
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity playerEntity) {
         super.onBreak(world, pos, state, playerEntity);
         for (BlockPos entityPos : getAdjacentTiles(world, pos)) {
-            world.getWorld().sendPacket(new CustomPayloadServerPacket(ModPackets.PACKET_POINT_DESTROYED, new PacketByteBuf(Unpooled.buffer()).writeBlockPos(entityPos)));
+            if(world.getBlockEntity(entityPos) instanceof INetworkComponent) {
+                ComponentHelper.removeComponentLinks(world, (INetworkComponent) world.getBlockEntity(entityPos));
+            }
         }
     }
 

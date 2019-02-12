@@ -117,8 +117,10 @@ public class BlockEntityStorageBay extends BlockEntityBase implements SidedInven
         ItemStack inventoryStack = inventory.get(slot);
         if(inventoryStack.isEmpty() || !(inventoryStack.getItem() instanceof ItemStorageCell)) {
             return false;
-        }else if(inventoryStack.getTag().containsKey("stored") && inventoryStack.getTag().getInt("stored") > ((ItemStorageCell) inventoryStack.getItem()).getType().getStorageCapacity()) {
-            return false;
+        }else if(inventoryStack.getTag() != null) {
+            if(inventoryStack.getTag().containsKey("stored") && (inventoryStack.getTag().getInt("stored") + stack.getAmount()) > ((ItemStorageCell) inventoryStack.getItem()).getType().getStorageCapacity()) {
+                return false;
+            }
         }
 
         if(inventoryStack.getTag() == null) {
@@ -127,6 +129,7 @@ public class BlockEntityStorageBay extends BlockEntityBase implements SidedInven
             tag.put("data", new ListTag());
             inventoryStack.setTag(tag);
             inventory.set(slot, inventoryStack);
+            this.updateEntity();
         }
 
         return true;
@@ -226,7 +229,7 @@ public class BlockEntityStorageBay extends BlockEntityBase implements SidedInven
 
     @Override
     public BlockEntityController getControllerEntity() {
-        if(world.getBlockEntity(controllerPos) instanceof BlockEntityController) {
+        if(controllerPos != null && world.getBlockEntity(controllerPos) instanceof BlockEntityController) {
             return (BlockEntityController) world.getBlockEntity(controllerPos);
         }
 

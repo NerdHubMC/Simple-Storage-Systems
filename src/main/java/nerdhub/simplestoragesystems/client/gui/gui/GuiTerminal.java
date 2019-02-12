@@ -137,22 +137,18 @@ public class GuiTerminal extends ContainerGuiBase {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int clickedButton) {
         super.mouseClicked(mouseX, mouseY, clickedButton);
-        if(tile.isLinked) {
+        if(tile.getControllerEntity() != null) {
             ItemStack stack = MinecraftClient.getInstance().player.inventory.getCursorStack();
-
             int x = 8;
             int y = 26;
 
             for (int i = 0; i < 9 * 4; ++i) {
                 if (inBounds(left + x, top + y, 16, 16, (int) mouseX, (int) mouseY)) {
-                    if(!stack.isEmpty()) {
+                    if(!stack.isEmpty() && tile.getControllerEntity().storeStack(stack, true)) {
                         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+                        buf.writeBlockPos(tile.controllerPos);
                         buf.writeItemStack(stack);
-                        buf.writeBlockPos(tile.getPos());
                         MinecraftClient.getInstance().getNetworkHandler().getClientConnection().sendPacket(new CustomPayloadServerPacket(ModPackets.PACKET_STORE_STACK, buf));
-                        MinecraftClient.getInstance().player.inventory.setCursorStack(ItemStack.EMPTY);
-                        MinecraftClient.getInstance().player.inventory.markDirty();
-                        MinecraftClient.getInstance().player.inventory.updateItems();
                     }else {
                     }
                 }
@@ -164,11 +160,9 @@ public class GuiTerminal extends ContainerGuiBase {
                     y += 18;
                 }
             }
-        }else {
-            System.out.println("jsadnjnsad");
         }
 
-        return false;
+        return true;
     }
 
     /**

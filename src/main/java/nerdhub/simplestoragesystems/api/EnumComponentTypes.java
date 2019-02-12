@@ -2,6 +2,7 @@ package nerdhub.simplestoragesystems.api;
 
 public enum EnumComponentTypes {
     CONTROLLER(false),
+    WIRELESS_POINT(false),
     STORAGE_BAY(true),
     TERMINAL(true),
     CRAFTING_TERMINAL(true),

@@ -2,11 +2,9 @@ package nerdhub.simplestoragesystems.tiles.components;
 
 import abused_master.energy.EnergyStorage;
 import abused_master.energy.IEnergyReceiver;
-import io.netty.buffer.Unpooled;
 import nerdhub.simplestoragesystems.api.EnumComponentTypes;
 import nerdhub.simplestoragesystems.api.ILinkerComponent;
 import nerdhub.simplestoragesystems.api.INetworkComponent;
-import nerdhub.simplestoragesystems.network.ModPackets;
 import nerdhub.simplestoragesystems.registry.ModBlockEntities;
 import nerdhub.simplestoragesystems.tiles.BlockEntityEnergyBase;
 import net.fabricmc.fabric.api.util.NbtType;
@@ -16,9 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.server.network.packet.CustomPayloadServerPacket;
 import net.minecraft.text.StringTextComponent;
-import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.TagHelper;
 import net.minecraft.util.math.BlockPos;
 
@@ -166,11 +162,8 @@ public class BlockEntityController extends BlockEntityEnergyBase implements IEne
             if(!wirelessPointPositions.contains(componentPos)) {
                 BlockEntityWirelessPoint point = (BlockEntityWirelessPoint) world.getBlockEntity(componentPos);
                 this.wirelessPointPositions.add(componentPos);
+                point.setControllerPos(pos);
 
-                world.sendPacket(new CustomPayloadServerPacket(ModPackets.PACKET_LINK_POINT, new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeCompoundTag(TagHelper.serializeBlockPos(componentPos))));
-                for (BlockPos connectedComponents : point.connectedComponents) {
-                    world.sendPacket(new CustomPayloadServerPacket(ModPackets.PACKET_LINK_COMPONENTS, new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeCompoundTag(TagHelper.serializeBlockPos(connectedComponents))));
-                }
                 player.addChatMessage(new StringTextComponent("Successfully linked component!"), true);
             }else {
                 player.addChatMessage(new StringTextComponent("Component is already linked!"), true);
