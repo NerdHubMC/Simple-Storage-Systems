@@ -16,6 +16,8 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.util.DefaultedList;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.InventoryUtil;
+import net.minecraft.util.TagHelper;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
 
@@ -26,6 +28,8 @@ import java.util.List;
 public class BlockEntityStorageBay extends BlockEntityBase implements SidedInventory, INetworkComponent {
 
     public DefaultedList<ItemStack> inventory = DefaultedList.create(10, ItemStack.EMPTY);
+    public boolean isLinked = false;
+    public BlockPos controllerPos = null;
 
     public BlockEntityStorageBay() {
         super(ModBlockEntities.STORAGE_BAY);
@@ -36,12 +40,22 @@ public class BlockEntityStorageBay extends BlockEntityBase implements SidedInven
         super.fromTag(tag);
         inventory = DefaultedList.create(10, ItemStack.EMPTY);
         InventoryUtil.deserialize(tag, this.inventory);
+        isLinked = tag.getBoolean("isLinked");
+
+        if(tag.containsKey("controllerPos")) {
+            controllerPos = TagHelper.deserializeBlockPos(tag.getCompound("controllerPos"));
+        }
     }
 
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
         InventoryUtil.serialize(tag, this.inventory);
+        tag.putBoolean("isLinked", this.isLinked);
+
+        if(controllerPos != null) {
+            tag.put("controllerPos", TagHelper.serializeBlockPos(controllerPos));
+        }
         return tag;
     }
 
@@ -72,10 +86,12 @@ public class BlockEntityStorageBay extends BlockEntityBase implements SidedInven
         return count;
     }
 
-    public boolean storeStack(ItemStack stack) {
+    public boolean storeStack(ItemStack stack, boolean simulate) {
         for (int i : getInvAvailableSlots(null)) {
             if(canStoreInCell(i, stack)) {
-                this.writeStackToCell(i, stack);
+                if(!simulate)
+                    this.writeStackToCell(i, stack);
+
                 return true;
             }
         }
@@ -194,5 +210,26 @@ public class BlockEntityStorageBay extends BlockEntityBase implements SidedInven
     @Override
     public EnumComponentTypes getComponentType() {
         return EnumComponentTypes.STORAGE_BAY;
+    }
+
+    @Override
+    public void setIsLinked(boolean isLinked) {
+        this.isLinked = isLinked;
+        this.updateEntity();
+    }
+
+    @Override
+    public void setControllerPos(BlockPos controllerPos) {
+        this.controllerPos = controllerPos;
+        this.updateEntity();
+    }
+
+    @Override
+    public BlockEntityController getControllerEntity() {
+        if(world.getBlockEntity(controllerPos) instanceof BlockEntityController) {
+            return (BlockEntityController) world.getBlockEntity(controllerPos);
+        }
+
+        return null;
     }
 }

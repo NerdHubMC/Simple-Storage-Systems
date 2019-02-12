@@ -10,6 +10,7 @@ import nerdhub.simplestoragesystems.client.gui.gui.GuiTerminal;
 import nerdhub.simplestoragesystems.tiles.components.BlockEntityController;
 import nerdhub.simplestoragesystems.tiles.components.BlockEntityStorageBay;
 import nerdhub.simplestoragesystems.tiles.components.BlockEntityTerminal;
+import nerdhub.simplestoragesystems.tiles.components.BlockEntityWirelessPoint;
 import nerdhub.simplestoragesystems.utils.RegistryHelper;
 import net.fabricmc.fabric.api.client.gui.GuiProviderRegistry;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
@@ -23,6 +24,7 @@ public class ModBlockEntities {
     public static BlockEntityType<BlockEntityController> CONTROLLER;
     public static BlockEntityType<BlockEntityStorageBay> STORAGE_BAY;
     public static BlockEntityType<BlockEntityTerminal> TERMINAL;
+    public static BlockEntityType<BlockEntityWirelessPoint> WIRELESS_POINT;
 
     //Guis
     public static final Identifier CONTROLLER_CONTAINER = new Identifier(SimpleStorageSystems.MODID, "controller_container");
@@ -33,6 +35,7 @@ public class ModBlockEntities {
         CONTROLLER = RegistryHelper.registerTile(new Identifier(SimpleStorageSystems.MODID, "controller"), BlockEntityController.class);
         STORAGE_BAY = RegistryHelper.registerTile(new Identifier(SimpleStorageSystems.MODID, "storage_bay"), BlockEntityStorageBay.class);
         TERMINAL = RegistryHelper.registerTile(new Identifier(SimpleStorageSystems.MODID, "terminal"), BlockEntityTerminal.class);
+        WIRELESS_POINT = RegistryHelper.registerTile(new Identifier(SimpleStorageSystems.MODID, "wireless_point"), BlockEntityWirelessPoint.class);
     }
 
     public static void registerServerGUIs() {

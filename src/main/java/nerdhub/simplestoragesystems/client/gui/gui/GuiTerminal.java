@@ -1,31 +1,39 @@
 package nerdhub.simplestoragesystems.client.gui.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import io.netty.buffer.Unpooled;
 import nerdhub.simplestoragesystems.SimpleStorageSystems;
 import nerdhub.simplestoragesystems.client.gui.container.ContainerTerminal;
+import nerdhub.simplestoragesystems.client.gui.widget.Scrollbar;
+import nerdhub.simplestoragesystems.client.gui.widget.TerminalViewHelper;
+import nerdhub.simplestoragesystems.network.ModPackets;
 import nerdhub.simplestoragesystems.tiles.components.BlockEntityTerminal;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.container.Slot;
 import net.minecraft.container.SlotActionType;
+import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.packet.CustomPayloadServerPacket;
 import net.minecraft.text.StringTextComponent;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.PacketByteBuf;
 
-public class GuiTerminal extends ContainerScreen {
+public class GuiTerminal extends ContainerGuiBase {
 
     public Identifier terminalGui = new Identifier(SimpleStorageSystems.MODID, "textures/gui/terminal_gui.png");
-    public Identifier TEXTURE = new Identifier("textures/gui/container/creative_inventory/tabs.png");
     public BlockEntityTerminal tile;
+
     public TextFieldWidget searchBar;
-    public float scrollBarPosition;
+    private int slotNumber;
+    private Scrollbar scrollbar;
+    private TerminalViewHelper view;
 
     public GuiTerminal(BlockEntityTerminal tile, ContainerTerminal container) {
         super(container, container.playerInventory, new StringTextComponent("Storage Terminal"));
         this.containerWidth = 194;
-        this.containerHeight = 176;
+        this.containerHeight = 193;
         this.tile = tile;
+        this.view = new TerminalViewHelper(this);
     }
 
     @Override
@@ -37,7 +45,9 @@ public class GuiTerminal extends ContainerScreen {
         this.searchBar.setVisible(true);
         this.searchBar.method_1868(16777215);
         this.listeners.add(this.searchBar);
-        this.scrollBarPosition = 0f;
+
+        this.scrollbar = new Scrollbar(174, getTopHeight(), 12, (4 * 18) - 2);
+        updateScrollbar();
     }
 
     @Override
@@ -45,12 +55,58 @@ public class GuiTerminal extends ContainerScreen {
         this.drawBackground();
         super.draw(var1, var2, var3);
         this.drawMousoverTooltip(var1, var2);
+
+        if(isOverSlotWithStack()) {
+            //TODO RENDER TOOLTIP IF MOUSE IS OVER STACK
+        }
+
+        if(scrollbar != null) {
+            scrollbar.update(this, var1 - left, var2 - top);
+        }
     }
 
     @Override
-    public void drawForeground(int int_1, int int_2) {
+    public void drawForeground(int mouseX, int mouseY) {
         String string_1 = "Terminal";
         this.fontRenderer.draw(string_1, 8, 10, 4210752);
+
+        int x = 8;
+        int y = 26;
+        this.slotNumber = -1;
+        int slot = scrollbar != null ? (scrollbar.getOffset() * 9) : 0;
+
+        for (int i = 0; i < 9 * 4; ++i) {
+            if (inBounds(x, y, 16, 16, mouseX, mouseY)) {
+                this.slotNumber = slot;
+            }
+
+            if (slot < view.getStacks().size()) {
+                view.getStacks().get(slot).draw(this, x, y);
+            }
+
+            if (inBounds(left + x, top + y, 16, 16, mouseX, mouseY)) {
+                int color = -2130706433;
+
+                GlStateManager.disableLighting();
+                GlStateManager.disableDepthTest();
+                zOffset = 190;
+                GlStateManager.colorMask(true, true, true, false);
+                drawGradientRect(x, y, x + 16, y + 16, color, color);
+                zOffset = 0;
+                GlStateManager.colorMask(true, true, true, true);
+                GlStateManager.enableLighting();
+                GlStateManager.enableDepthTest();
+            }
+
+            slot++;
+
+            x += 18;
+
+            if ((i + 1) % 9 == 0) {
+                x = 8;
+                y += 18;
+            }
+        }
     }
 
     @Override
@@ -60,20 +116,10 @@ public class GuiTerminal extends ContainerScreen {
         drawTexturedRect(left, top, 0, 0, containerWidth, containerHeight);
         this.searchBar.render(i, i1, v);
 
-        int int_4 = top + 26;
-        int int_5 = int_4 + 52;
-        this.client.getTextureManager().bindTexture(TEXTURE);
-        this.drawTexturedRect(left + 174, int_4 + ((int_5 - int_4 - 17) * this.scrollBarPosition), 232, 0, 12, 15);
-    }
-
-    @Override
-    public boolean mouseScrolled(double double_1) {
-        //int int_1 = (((CreativePlayerInventoryScreen.CreativeContainer) this.container).itemList.size() + 9 - 1) / 9 - 5;
-        //this.scrollBarPosition = (float) ((double) this.scrollBarPosition - double_1 / (double) int_1);
-        this.scrollBarPosition = MathHelper.clamp(this.scrollBarPosition, 0.0F, 1.0F);
-        //TODO LOOK AT THIS FOR DISPLAYING ITEMS
-        //((CreativePlayerInventoryScreen.CreativeContainer)this.container).method_2473(this.scrollPosition);
-        return true;
+        if(scrollbar != null) {
+            GlStateManager.color4f(1.0f, 1.0f, 1.0f, 1.0f);
+            scrollbar.draw(this);
+        }
     }
 
     @Override
@@ -82,6 +128,76 @@ public class GuiTerminal extends ContainerScreen {
         if(searchBar != null) {
             searchBar.tick();
         }
+
+        if(tile.isLinked) {
+            view.sort();
+        }
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int clickedButton) {
+        super.mouseClicked(mouseX, mouseY, clickedButton);
+        if(tile.isLinked) {
+            ItemStack stack = MinecraftClient.getInstance().player.inventory.getCursorStack();
+
+            int x = 8;
+            int y = 26;
+
+            for (int i = 0; i < 9 * 4; ++i) {
+                if (inBounds(left + x, top + y, 16, 16, (int) mouseX, (int) mouseY)) {
+                    if(!stack.isEmpty()) {
+                        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+                        buf.writeItemStack(stack);
+                        buf.writeBlockPos(tile.getPos());
+                        MinecraftClient.getInstance().getNetworkHandler().getClientConnection().sendPacket(new CustomPayloadServerPacket(ModPackets.PACKET_STORE_STACK, buf));
+                        MinecraftClient.getInstance().player.inventory.setCursorStack(ItemStack.EMPTY);
+                        MinecraftClient.getInstance().player.inventory.markDirty();
+                        MinecraftClient.getInstance().player.inventory.updateItems();
+                    }else {
+                    }
+                }
+
+                x += 18;
+
+                if ((i + 1) % 9 == 0) {
+                    x = 8;
+                    y += 18;
+                }
+            }
+        }else {
+            System.out.println("jsadnjnsad");
+        }
+
+        return false;
+    }
+
+    /**
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int int_1) {
+        if(getSlotUnderMouse(mouseX, mouseY) != null) {
+            ItemStack stack = MinecraftClient.getInstance().player.inventory.getCursorStack();
+            if(stack.isEmpty()) {
+
+            }else {
+                if(tile != null && tile.getControllerEntity().storeStack(stack, false)) {
+                    PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+                    buf.writeItemStack(stack);
+                    buf.writeBlockPos(tile.getPos());
+                    MinecraftClient.getInstance().getNetworkHandler().getClientConnection().sendPacket(new CustomPayloadServerPacket(ModPackets.PACKET_STORE_STACK, buf));
+                }
+            }
+        }
+
+        return super.mouseClicked(mouseX, mouseY, int_1);
+    }
+    */
+
+    @Override
+    public boolean mouseScrolled(double double_1) {
+        if(scrollbar != null && double_1 != 0) {
+            scrollbar.wheel((int) double_1);
+        }
+        return true;
     }
 
     @Override
@@ -98,5 +214,36 @@ public class GuiTerminal extends ContainerScreen {
         String string_1 = this.searchBar.getText();
         this.initialize(minecraftClient_1, int_1, int_2);
         this.searchBar.setText(string_1);
+    }
+
+    public boolean isOverSlotWithStack() {
+        return tile.isLinked && isMouseOverSlot() && slotNumber < view.getStacks().size();
+    }
+
+    public boolean isMouseOverSlot() {
+        return slotNumber > 0;
+    }
+
+    public boolean isOverSlotArea(int mouseX, int mouseY) {
+        return inBounds(7, 25, 162, 18 * 4, mouseX, mouseY);
+    }
+
+    public int getSlotNumber() {
+        return slotNumber;
+    }
+
+    public void updateScrollbar() {
+        if (scrollbar != null) {
+            scrollbar.setEnabled(getRows() > 4);
+            scrollbar.setMaxOffset(getRows() - 4);
+        }
+    }
+
+    public int getRows() {
+        return Math.max(0, (int) Math.ceil((float) view.getStacks().size() / 9F));
+    }
+
+    public int getTopHeight() {
+        return 26;
     }
 }

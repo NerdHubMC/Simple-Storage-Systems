@@ -1,5 +1,6 @@
 package nerdhub.simplestoragesystems;
 
+import nerdhub.simplestoragesystems.network.ModPackets;
 import nerdhub.simplestoragesystems.registry.ModBlockEntities;
 import nerdhub.simplestoragesystems.registry.ModBlocks;
 import nerdhub.simplestoragesystems.registry.ModItems;
@@ -28,10 +29,12 @@ public class SimpleStorageSystems implements ModInitializer, ClientModInitialize
         ModBlockEntities.registerBlockEntities();
         ModBlockEntities.registerServerGUIs();
         ModRecipes.registerRecipes();
+        ModPackets.registerPackets();
     }
 
     @Override
     public void onInitializeClient() {
         ModBlockEntities.registerClientGUIs();
+        ModPackets.registerClientPackets();
     }
 }

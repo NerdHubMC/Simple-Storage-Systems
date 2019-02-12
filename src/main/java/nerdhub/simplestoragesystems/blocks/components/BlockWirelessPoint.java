@@ -1,25 +1,35 @@
 package nerdhub.simplestoragesystems.blocks.components;
 
+import io.netty.buffer.Unpooled;
 import nerdhub.simplestoragesystems.SimpleStorageSystems;
 import nerdhub.simplestoragesystems.api.INetworkComponent;
-import nerdhub.simplestoragesystems.blocks.BlockBase;
+import nerdhub.simplestoragesystems.blocks.BlockWithEntityBase;
+import nerdhub.simplestoragesystems.network.ModPackets;
+import nerdhub.simplestoragesystems.tiles.components.BlockEntityWirelessPoint;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.VerticalEntityPosition;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.server.network.packet.CustomPayloadServerPacket;
 import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.util.PacketByteBuf;
+import net.minecraft.util.TagHelper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
-public class BlockWirelessPoint extends BlockBase {
+public class BlockWirelessPoint extends BlockWithEntityBase {
 
-    public static final BooleanProperty[] PROPS = new BooleanProperty[]{
+    public static final BooleanProperty[] PROPS = new BooleanProperty[] {
             BooleanProperty.create("down"),
             BooleanProperty.create("up"),
             BooleanProperty.create("north"),
@@ -37,11 +47,29 @@ public class BlockWirelessPoint extends BlockBase {
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
+        BlockEntityWirelessPoint point = (BlockEntityWirelessPoint) context.getWorld().getBlockEntity(context.getBlockPos());
+        if(point != null && point.getControllerPos() != null) {
+            point.connectedComponents.clear();
+            for (BlockPos entityPos : getAdjacentTiles(context.getWorld(), context.getBlockPos())) {
+                context.getWorld().sendPacket(new CustomPayloadServerPacket(ModPackets.PACKET_LINK_COMPONENTS, new PacketByteBuf(Unpooled.buffer()).writeBlockPos(point.getControllerPos()).writeCompoundTag(TagHelper.serializeBlockPos(entityPos))));
+                point.addComponent(entityPos);
+            }
+        }
+
         return getStateWithProps(this.getDefaultState(), context.getWorld(), context.getBlockPos());
     }
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState state2, IWorld world, BlockPos blockPos, BlockPos blockPos_2) {
+        BlockEntityWirelessPoint point = (BlockEntityWirelessPoint) world.getBlockEntity(blockPos);
+        point.connectedComponents.clear();
+        if(point.getControllerPos() != null) {
+            for (BlockPos entityPos : getAdjacentTiles(world, blockPos)) {
+                world.getWorld().sendPacket(new CustomPayloadServerPacket(ModPackets.PACKET_LINK_COMPONENTS, new PacketByteBuf(Unpooled.buffer()).writeBlockPos(point.getControllerPos()).writeCompoundTag(TagHelper.serializeBlockPos(entityPos))));
+                point.addComponent(entityPos);
+            }
+        }
+
         return getStateWithProps(state, world, blockPos);
     }
 
@@ -49,10 +77,30 @@ public class BlockWirelessPoint extends BlockBase {
         for (int i = 0; i < PROPS.length - 1; i++) {
             Direction facing = Direction.values()[i];
             BlockEntity blockEntity = world.getBlockEntity(pos.offset(facing));
-            state = state.with(PROPS[i], blockEntity instanceof INetworkComponent);
+            state = state.with(PROPS[i], blockEntity instanceof INetworkComponent && ((INetworkComponent) blockEntity).getComponentType().isLinkable());
         }
 
         return state;
+    }
+
+    public static List<BlockPos> getAdjacentTiles(IWorld world, BlockPos pos) {
+        List<BlockPos> list = new ArrayList<>();
+        for (Direction direction : Direction.values()) {
+            BlockEntity entity = world.getBlockEntity(pos.offset(direction));
+            if (entity != null && entity instanceof INetworkComponent && ((INetworkComponent) entity).getComponentType().isLinkable()) {
+                list.add(pos.offset(direction));
+            }
+        }
+
+        return list;
+    }
+
+    @Override
+    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity playerEntity) {
+        super.onBreak(world, pos, state, playerEntity);
+        for (BlockPos entityPos : getAdjacentTiles(world, pos)) {
+            world.getWorld().sendPacket(new CustomPayloadServerPacket(ModPackets.PACKET_POINT_DESTROYED, new PacketByteBuf(Unpooled.buffer()).writeBlockPos(entityPos)));
+        }
     }
 
     @Override
@@ -88,5 +136,11 @@ public class BlockWirelessPoint extends BlockBase {
     @Override
     public VoxelShape getOutlineShape(BlockState blockState_1, BlockView blockView_1, BlockPos blockPos_1, VerticalEntityPosition verticalEntityPosition_1) {
         return Block.createCuboidShape(5, 5, 5, 11, 11, 11);
+    }
+
+    @Nullable
+    @Override
+    public BlockEntity createBlockEntity(BlockView blockView) {
+        return new BlockEntityWirelessPoint();
     }
 }

@@ -4,16 +4,14 @@ import nerdhub.simplestoragesystems.api.EnumComponentTypes;
 import nerdhub.simplestoragesystems.api.INetworkComponent;
 import nerdhub.simplestoragesystems.registry.ModBlockEntities;
 import nerdhub.simplestoragesystems.tiles.BlockEntityBase;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.DefaultedList;
-import net.minecraft.util.InventoryUtil;
+import net.minecraft.util.TagHelper;
+import net.minecraft.util.math.BlockPos;
 
-public class BlockEntityTerminal extends BlockEntityBase implements Inventory, INetworkComponent {
+public class BlockEntityTerminal extends BlockEntityBase implements INetworkComponent {
 
-    public DefaultedList<ItemStack> inventory = DefaultedList.create(27, ItemStack.EMPTY);
+    public boolean isLinked = false;
+    public BlockPos controllerPos;
 
     public BlockEntityTerminal() {
         super(ModBlockEntities.TERMINAL);
@@ -22,14 +20,20 @@ public class BlockEntityTerminal extends BlockEntityBase implements Inventory, I
     @Override
     public void fromTag(CompoundTag tag) {
         super.fromTag(tag);
-        inventory = DefaultedList.create(27, ItemStack.EMPTY);
-        InventoryUtil.deserialize(tag, inventory);
+        isLinked = tag.getBoolean("isLinked");
+
+        if(tag.containsKey("controllerPos")) {
+            controllerPos = TagHelper.deserializeBlockPos(tag.getCompound("controllerPos"));
+        }
     }
 
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
-        InventoryUtil.serialize(tag, inventory);
+
+        if(controllerPos != null) {
+            tag.put("controllerPos", TagHelper.serializeBlockPos(controllerPos));
+        }
         return tag;
     }
 
@@ -38,47 +42,28 @@ public class BlockEntityTerminal extends BlockEntityBase implements Inventory, I
     }
 
     @Override
-    public int getInvSize() {
-        return inventory.size();
-    }
-
-    @Override
-    public boolean isInvEmpty() {
-        return inventory.isEmpty();
-    }
-
-    @Override
-    public ItemStack getInvStack(int i) {
-        return inventory.get(i);
-    }
-
-    @Override
-    public ItemStack takeInvStack(int i, int i1) {
-        return InventoryUtil.splitStack(inventory, i, i1);
-    }
-
-    @Override
-    public ItemStack removeInvStack(int i) {
-        return InventoryUtil.removeStack(inventory, i);
-    }
-
-    @Override
-    public void setInvStack(int i, ItemStack itemStack) {
-        inventory.set(i, itemStack);
-    }
-
-    @Override
-    public boolean canPlayerUseInv(PlayerEntity playerEntity) {
-        return true;
-    }
-
-    @Override
-    public void clearInv() {
-        inventory.clear();
-    }
-
-    @Override
     public EnumComponentTypes getComponentType() {
         return EnumComponentTypes.TERMINAL;
+    }
+
+    @Override
+    public void setIsLinked(boolean isLinked) {
+        this.isLinked = isLinked;
+        this.updateEntity();
+    }
+
+    @Override
+    public void setControllerPos(BlockPos controllerPos) {
+        this.controllerPos = controllerPos;
+        this.updateEntity();
+    }
+
+    @Override
+    public BlockEntityController getControllerEntity() {
+        if(world.getBlockEntity(controllerPos) instanceof BlockEntityController) {
+            return (BlockEntityController) world.getBlockEntity(controllerPos);
+        }
+
+        return null;
     }
 }
