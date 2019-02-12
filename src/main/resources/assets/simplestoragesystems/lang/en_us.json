@@ -1,6 +1,8 @@
 {
   "itemGroup.simplestoragesystems.simplestoragesystems" : "Simple Storage Systems",
   "block.simplestoragesystems.storage_bay" : "Storage Bay",
+  "block.simplestoragesystems.controller" : "Storage Controller",
+  "block.simplestoragesystems.terminal" : "Terminal",
   "item.simplestoragesystems.storage_cell" : "Storage Cell",
   "item.simplestoragesystems.storage_cell_4" : "Storage Cell x4",
   "item.simplestoragesystems.storage_cell_16" : "Storage Cell x16",

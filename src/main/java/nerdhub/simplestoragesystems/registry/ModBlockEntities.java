@@ -7,6 +7,7 @@ import nerdhub.simplestoragesystems.client.gui.gui.GuiController;
 import nerdhub.simplestoragesystems.client.gui.gui.GuiStorageBay;
 import nerdhub.simplestoragesystems.tiles.components.BlockEntityController;
 import nerdhub.simplestoragesystems.tiles.components.BlockEntityStorageBay;
+import nerdhub.simplestoragesystems.tiles.components.BlockEntityTerminal;
 import nerdhub.simplestoragesystems.utils.RegistryHelper;
 import net.fabricmc.fabric.api.client.gui.GuiProviderRegistry;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
@@ -19,14 +20,17 @@ public class ModBlockEntities {
     //Tiles
     public static BlockEntityType<BlockEntityController> CONTROLLER;
     public static BlockEntityType<BlockEntityStorageBay> STORAGE_BAY;
+    public static BlockEntityType<BlockEntityTerminal> TERMINAL;
 
     //Guis
     public static final Identifier CONTROLLER_CONTAINER = new Identifier(SimpleStorageSystems.MODID, "controller_container");
     public static final Identifier STORAGE_BAY_CONTAINER = new Identifier(SimpleStorageSystems.MODID, "storage_bay_container");
+    public static final Identifier TERMINAL_CONTAINER = new Identifier(SimpleStorageSystems.MODID, "terminal_container");
 
     public static void registerBlockEntities() {
         CONTROLLER = RegistryHelper.registerTile(new Identifier(SimpleStorageSystems.MODID, "controller"), BlockEntityController.class);
         STORAGE_BAY = RegistryHelper.registerTile(new Identifier(SimpleStorageSystems.MODID, "storage_bay"), BlockEntityStorageBay.class);
+        TERMINAL = RegistryHelper.registerTile(new Identifier(SimpleStorageSystems.MODID, "terminal"), BlockEntityTerminal.class);
     }
 
     public static void registerServerGUIs() {

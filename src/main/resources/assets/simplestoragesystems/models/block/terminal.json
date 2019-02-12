@@ -1,0 +1,507 @@
+{
+    "parent": "block/cube_all",
+    "textures": {
+        "particle": "simplestoragesystems:blocks/terminal_front",
+        "terminal_front": "simplestoragesystems:blocks/terminal_front",
+        "base": "simplestoragesystems:blocks/base"
+    },
+    "display": {
+        "gui": {
+            "rotation": [
+                0,
+                190,
+                0
+            ],
+            "translation": [
+                -1,
+                0,
+                0
+            ],
+            "scale": [
+                0.625,
+                0.625,
+                0.625
+            ]
+        },
+        "ground": {
+            "rotation": [
+                90,
+                0,
+                0
+            ],
+            "translation": [
+                0,
+                -1,
+                0
+            ],
+            "scale": [
+                0.25,
+                0.25,
+                0.25
+            ]
+        },
+        "fixed": {
+            "rotation": [
+                0,
+                180,
+                0
+            ],
+            "translation": [
+                0,
+                0,
+                0
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ]
+        },
+        "head": {
+            "rotation": [
+                0,
+                180,
+                0
+            ],
+            "translation": [
+                0,
+                0,
+                0
+            ],
+            "scale": [
+                1,
+                1,
+                1
+            ]
+        },
+        "firstperson_righthand": {
+            "rotation": [
+                2,
+                126,
+                3
+            ],
+            "translation": [
+                0,
+                2.5,
+                0
+            ],
+            "scale": [
+                0.4,
+                0.4,
+                0.4
+            ]
+        },
+        "thirdperson_righthand": {
+            "rotation": [
+                0,
+                23,
+                1
+            ],
+            "translation": [
+                0,
+                0.5,
+                0
+            ],
+            "scale": [
+                0.375,
+                0.375,
+                0.375
+            ]
+        }
+    },
+    "elements": [
+        {
+            "name": "Cube",
+            "from": [
+                1,
+                1,
+                1
+            ],
+            "to": [
+                15,
+                15,
+                2
+            ],
+            "faces": {
+                "north": {
+                    "texture": "#terminal_front",
+                    "uv": [
+                        1,
+                        1,
+                        15,
+                        15
+                    ]
+                },
+                "east": {
+                    "texture": "#terminal_front",
+                    "uv": [
+                        0,
+                        1,
+                        1,
+                        15
+                    ]
+                },
+                "south": {
+                    "texture": "#base",
+                    "uv": [
+                        1,
+                        1,
+                        15,
+                        15
+                    ]
+                },
+                "west": {
+                    "texture": "#terminal_front",
+                    "uv": [
+                        0,
+                        0,
+                        1,
+                        14
+                    ]
+                },
+                "up": {
+                    "texture": "#terminal_front",
+                    "uv": [
+                        1,
+                        0,
+                        15,
+                        1
+                    ]
+                },
+                "down": {
+                    "texture": "#terminal_front",
+                    "uv": [
+                        1,
+                        0,
+                        15,
+                        1
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Cube",
+            "from": [
+                1,
+                14,
+                0
+            ],
+            "to": [
+                15,
+                15,
+                1
+            ],
+            "faces": {
+                "north": {
+                    "texture": "#terminal_front",
+                    "uv": [
+                        1,
+                        0,
+                        15,
+                        1
+                    ]
+                },
+                "east": {
+                    "texture": "#terminal_front",
+                    "uv": [
+                        0,
+                        0,
+                        1,
+                        1
+                    ]
+                },
+                "west": {
+                    "texture": "#terminal_front",
+                    "uv": [
+                        0,
+                        0,
+                        1,
+                        1
+                    ]
+                },
+                "up": {
+                    "texture": "#terminal_front",
+                    "uv": [
+                        1,
+                        0,
+                        15,
+                        1
+                    ]
+                },
+                "down": {
+                    "texture": "#terminal_front",
+                    "uv": [
+                        1,
+                        0,
+                        15,
+                        1
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Cube",
+            "from": [
+                1,
+                1,
+                0
+            ],
+            "to": [
+                15,
+                2,
+                1
+            ],
+            "faces": {
+                "north": {
+                    "texture": "#terminal_front",
+                    "uv": [
+                        1,
+                        0,
+                        15,
+                        1
+                    ]
+                },
+                "east": {
+                    "texture": "#terminal_front",
+                    "uv": [
+                        0,
+                        0,
+                        1,
+                        1
+                    ]
+                },
+                "west": {
+                    "texture": "#terminal_front",
+                    "uv": [
+                        0,
+                        0,
+                        1,
+                        1
+                    ]
+                },
+                "up": {
+                    "texture": "#terminal_front",
+                    "uv": [
+                        1,
+                        0,
+                        15,
+                        1
+                    ]
+                },
+                "down": {
+                    "texture": "#terminal_front",
+                    "uv": [
+                        1,
+                        0,
+                        15,
+                        1
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Cube",
+            "from": [
+                1,
+                2,
+                0
+            ],
+            "to": [
+                2,
+                14,
+                1
+            ],
+            "faces": {
+                "north": {
+                    "texture": "#terminal_front",
+                    "uv": [
+                        0,
+                        2,
+                        1,
+                        14
+                    ]
+                },
+                "east": {
+                    "texture": "#terminal_front",
+                    "uv": [
+                        0,
+                        2,
+                        1,
+                        14
+                    ]
+                },
+                "west": {
+                    "texture": "#terminal_front",
+                    "uv": [
+                        0,
+                        2,
+                        1,
+                        14
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Cube",
+            "from": [
+                14,
+                2,
+                0
+            ],
+            "to": [
+                15,
+                14,
+                1
+            ],
+            "faces": {
+                "north": {
+                    "texture": "#terminal_front",
+                    "uv": [
+                        0,
+                        2,
+                        1,
+                        14
+                    ]
+                },
+                "east": {
+                    "texture": "#terminal_front",
+                    "uv": [
+                        0,
+                        2,
+                        1,
+                        14
+                    ]
+                },
+                "west": {
+                    "texture": "#terminal_front",
+                    "uv": [
+                        0,
+                        2,
+                        1,
+                        14
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Cube",
+            "from": [
+                3,
+                3,
+                2
+            ],
+            "to": [
+                13,
+                13,
+                3
+            ],
+            "faces": {
+                "east": {
+                    "texture": "#base",
+                    "uv": [
+                        0,
+                        4,
+                        1,
+                        14
+                    ]
+                },
+                "south": {
+                    "texture": "#base",
+                    "uv": [
+                        2,
+                        2,
+                        12,
+                        12
+                    ]
+                },
+                "west": {
+                    "texture": "#base",
+                    "uv": [
+                        0,
+                        1,
+                        1,
+                        11
+                    ]
+                },
+                "up": {
+                    "texture": "#base",
+                    "uv": [
+                        3,
+                        0,
+                        13,
+                        1
+                    ]
+                },
+                "down": {
+                    "texture": "#base",
+                    "uv": [
+                        3,
+                        0,
+                        13,
+                        1
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Cube",
+            "from": [
+                5,
+                5,
+                3
+            ],
+            "to": [
+                11,
+                11,
+                4
+            ],
+            "faces": {
+                "east": {
+                    "texture": "#base",
+                    "uv": [
+                        0,
+                        3,
+                        1,
+                        10
+                    ]
+                },
+                "south": {
+                    "texture": "#terminal_front",
+                    "uv": [
+                        5,
+                        5,
+                        11,
+                        11
+                    ]
+                },
+                "west": {
+                    "texture": "#base",
+                    "uv": [
+                        0,
+                        2,
+                        1,
+                        8
+                    ]
+                },
+                "up": {
+                    "texture": "#base",
+                    "uv": [
+                        3,
+                        0,
+                        9,
+                        1
+                    ]
+                },
+                "down": {
+                    "texture": "#base",
+                    "uv": [
+                        2,
+                        0,
+                        9,
+                        1
+                    ]
+                }
+            }
+        }
+    ]
+}

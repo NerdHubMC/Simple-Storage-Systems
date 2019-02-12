@@ -74,6 +74,7 @@ public class BlockEntityController extends BlockEntityEnergyBase implements IEne
 
     @Override
     public void tick() {
+        receiveEnergy(1);
     }
 
     @Override
