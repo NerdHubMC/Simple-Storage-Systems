@@ -1,8 +1,10 @@
 package nerdhub.simplestoragesystems.items;
 
-//TODO ADD STORAGE CELLS
 public enum EnumStorageCells {
-    ;
+    STORAGE_CELL(512),
+    STORAGE_CELL_4(2048),
+    STORAGE_CELL_16(8192),
+    STORAGE_CELL_64(32768);
 
     private ItemStorageCell storageCellItem;
     private int storageCapacity;

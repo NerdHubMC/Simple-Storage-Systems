@@ -63,7 +63,7 @@ public class BlockEntityStorageBay extends BlockEntityBase implements SidedInven
         for (int i : getInvAvailableSlots(null)) {
             ItemStack inventoryStack = inventory.get(i);
             if(!inventoryStack.isEmpty() && inventoryStack.getTag() != null && inventoryStack.getTag().containsKey("stored")) {
-                count += inventoryStack.getTag().getByte("stored");
+                count += inventoryStack.getTag().getInt("stored");
             }
         }
 

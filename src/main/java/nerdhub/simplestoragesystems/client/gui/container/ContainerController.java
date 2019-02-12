@@ -4,33 +4,18 @@ import net.minecraft.container.Container;
 import net.minecraft.container.Slot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class ContainerStorageBay extends Container {
+public class ContainerController extends Container {
 
-    public final Inventory inventory;
     public final PlayerInventory playerInventory;
     public final World world;
 
-    public ContainerStorageBay(int syncId, PlayerInventory playerInventory, Inventory inventory) {
+    public ContainerController(int syncId, PlayerInventory playerInventory) {
         super(null, syncId);
-        this.inventory = inventory;
         this.playerInventory = playerInventory;
         this.world = playerInventory.player.world;
-
-        //Drive Slots
-        int j;
-        for(j = 0; j < 2; ++j) {
-            for(int var4 = 0; var4 < 5; ++var4) {
-                if (j == 1) {
-                    this.addSlot(new Slot(inventory, var4, 36 + var4 * 22, 20));
-                } else {
-                    this.addSlot(new Slot(inventory, 5 + var4, 36 + var4 * 22, 42));
-                }
-            }
-        }
 
         //Vanilla Player Slots
         int i;
