@@ -15,7 +15,7 @@ public class ItemStorageCell extends ItemBase {
     private EnumStorageCells type;
 
     public ItemStorageCell(EnumStorageCells type) {
-        super(type.getName(), SimpleStorageSystems.modItemGroup);
+        super(type.getName(), new Settings().itemGroup(SimpleStorageSystems.modItemGroup).stackSize(1));
         this.type = type;
     }
 

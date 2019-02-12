@@ -12,7 +12,6 @@ public class GuiController extends ContainerScreen {
 
     public Identifier controllerGui = new Identifier(SimpleStorageSystems.MODID, "textures/gui/controller_gui.png");
     public BlockEntityController tile;
-    public int guiLeft, guiTop;
 
     public GuiController(BlockEntityController tile, ContainerController container) {
         super(container, container.playerInventory, new StringTextComponent("Storage Controller"));
@@ -22,8 +21,6 @@ public class GuiController extends ContainerScreen {
     @Override
     protected void onInitialized() {
         super.onInitialized();
-        this.guiLeft = (this.width - this.containerWidth) / 2;
-        this.guiTop = (this.height - this.containerHeight) / 2;
     }
 
     @Override
@@ -43,20 +40,20 @@ public class GuiController extends ContainerScreen {
     public void drawBackground(float v, int i, int i1) {
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         client.getTextureManager().bindTexture(controllerGui);
-        drawTexturedRect(guiLeft, guiTop, 0, 0, containerWidth, containerHeight);
+        drawTexturedRect(left, top, 0, 0, containerWidth, containerHeight);
 
-        renderEnergy(guiLeft, guiTop);
+        renderEnergy();
 
         if(this.isPointWithinBounds(10, 13, 16, 60, i, i1)) {
             this.drawTooltip(tile.storage.getEnergyStored() + " / " + tile.storage.getEnergyCapacity() + " Energy", i, i1);
         }
     }
 
-    public void renderEnergy(int guiLeft, int guiTop) {
+    public void renderEnergy() {
         if(this.tile.storage.getEnergyStored() > 0) {
             int k = 85;
             int i = tile.storage.getEnergyStored() * k / tile.storage.getEnergyCapacity();
-            this.drawTexturedRect(guiLeft + 10, guiTop + 71 - i, 178, 61 - i, 14, i);
+            this.drawTexturedRect(left + 10, top + 71 - i, 178, 61 - i, 14, i);
         }
     }
 }

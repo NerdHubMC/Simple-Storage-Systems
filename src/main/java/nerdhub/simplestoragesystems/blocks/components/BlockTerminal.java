@@ -2,7 +2,9 @@ package nerdhub.simplestoragesystems.blocks.components;
 
 import nerdhub.simplestoragesystems.SimpleStorageSystems;
 import nerdhub.simplestoragesystems.blocks.BlockWithEntityBase;
+import nerdhub.simplestoragesystems.registry.ModBlockEntities;
 import nerdhub.simplestoragesystems.tiles.components.BlockEntityTerminal;
+import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.VerticalEntityPosition;
@@ -38,11 +40,9 @@ public class BlockTerminal extends BlockWithEntityBase {
 
     @Override
     public boolean activate(BlockState blockState, World world, BlockPos blockPos, PlayerEntity player, Hand hand, BlockHitResult blockHitResult) {
-        /**
-         if (!world.isClient) {
-         ContainerProviderRegistry.INSTANCE.openContainer(ModBlockEntities.TERMINAL_CONTAINER, player, buf -> buf.writeBlockPos(blockPos));
-         }
-         */
+        if (!world.isClient) {
+            ContainerProviderRegistry.INSTANCE.openContainer(ModBlockEntities.TERMINAL_CONTAINER, player, buf -> buf.writeBlockPos(blockPos));
+        }
 
         return true;
     }

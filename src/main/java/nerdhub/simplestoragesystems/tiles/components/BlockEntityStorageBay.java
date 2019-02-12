@@ -1,5 +1,7 @@
 package nerdhub.simplestoragesystems.tiles.components;
 
+import nerdhub.simplestoragesystems.api.EnumComponentTypes;
+import nerdhub.simplestoragesystems.api.INetworkComponent;
 import nerdhub.simplestoragesystems.items.ItemStorageCell;
 import nerdhub.simplestoragesystems.registry.ModBlockEntities;
 import nerdhub.simplestoragesystems.tiles.BlockEntityBase;
@@ -21,7 +23,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BlockEntityStorageBay extends BlockEntityBase implements SidedInventory {
+public class BlockEntityStorageBay extends BlockEntityBase implements SidedInventory, INetworkComponent {
 
     public DefaultedList<ItemStack> inventory = DefaultedList.create(10, ItemStack.EMPTY);
 
@@ -187,5 +189,10 @@ public class BlockEntityStorageBay extends BlockEntityBase implements SidedInven
     @Override
     public void clearInv() {
         inventory.clear();
+    }
+
+    @Override
+    public EnumComponentTypes getComponentType() {
+        return EnumComponentTypes.STORAGE_BAY;
     }
 }

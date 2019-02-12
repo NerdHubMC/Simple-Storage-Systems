@@ -12,7 +12,6 @@ public class GuiStorageBay extends ContainerScreen {
 
     public Identifier storageBayGui = new Identifier(SimpleStorageSystems.MODID, "textures/gui/storage_bay_gui.png");
     public BlockEntityStorageBay tile;
-    public int guiLeft, guiTop;
 
     public GuiStorageBay(BlockEntityStorageBay tile, ContainerStorageBay container) {
         super(container, container.playerInventory, new StringTextComponent("Storage Bay"));
@@ -22,8 +21,6 @@ public class GuiStorageBay extends ContainerScreen {
     @Override
     protected void onInitialized() {
         super.onInitialized();
-        this.guiLeft = (this.width - this.containerWidth) / 2;
-        this.guiTop = (this.height - this.containerHeight) / 2;
     }
 
     @Override
@@ -43,6 +40,6 @@ public class GuiStorageBay extends ContainerScreen {
     public void drawBackground(float v, int i, int i1) {
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         client.getTextureManager().bindTexture(storageBayGui);
-        drawTexturedRect(guiLeft, guiTop, 0, 0, containerWidth, containerHeight);
+        drawTexturedRect(left, top, 0, 0, containerWidth, containerHeight);
     }
 }

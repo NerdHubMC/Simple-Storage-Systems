@@ -3,8 +3,10 @@ package nerdhub.simplestoragesystems.registry;
 import nerdhub.simplestoragesystems.SimpleStorageSystems;
 import nerdhub.simplestoragesystems.client.gui.container.ContainerController;
 import nerdhub.simplestoragesystems.client.gui.container.ContainerStorageBay;
+import nerdhub.simplestoragesystems.client.gui.container.ContainerTerminal;
 import nerdhub.simplestoragesystems.client.gui.gui.GuiController;
 import nerdhub.simplestoragesystems.client.gui.gui.GuiStorageBay;
+import nerdhub.simplestoragesystems.client.gui.gui.GuiTerminal;
 import nerdhub.simplestoragesystems.tiles.components.BlockEntityController;
 import nerdhub.simplestoragesystems.tiles.components.BlockEntityStorageBay;
 import nerdhub.simplestoragesystems.tiles.components.BlockEntityTerminal;
@@ -36,6 +38,7 @@ public class ModBlockEntities {
     public static void registerServerGUIs() {
         ContainerProviderRegistry.INSTANCE.registerFactory(CONTROLLER_CONTAINER, (syncid, identifier, player, buf) -> new ContainerController(syncid, player.inventory));
         ContainerProviderRegistry.INSTANCE.registerFactory(STORAGE_BAY_CONTAINER, (syncid, identifier, player, buf) -> new ContainerStorageBay(syncid, player.inventory, (BlockEntityStorageBay) player.world.getBlockEntity(buf.readBlockPos())));
+        ContainerProviderRegistry.INSTANCE.registerFactory(TERMINAL_CONTAINER, (syncid, identifier, player, buf) -> new ContainerTerminal(syncid, player.inventory, (BlockEntityTerminal) player.world.getBlockEntity(buf.readBlockPos())));
     }
 
     public static void registerClientGUIs() {
@@ -44,6 +47,11 @@ public class ModBlockEntities {
             BlockPos pos = buf.readBlockPos();
             BlockEntityStorageBay storageBay = (BlockEntityStorageBay) player.world.getBlockEntity(pos);
             return new GuiStorageBay(storageBay, new ContainerStorageBay(syncid, player.inventory, storageBay));
+        }));
+        GuiProviderRegistry.INSTANCE.registerFactory(TERMINAL_CONTAINER, ((syncid, identifier, player, buf) -> {
+            BlockPos pos = buf.readBlockPos();
+            BlockEntityTerminal terminal = (BlockEntityTerminal) player.world.getBlockEntity(pos);
+            return new GuiTerminal(terminal, new ContainerTerminal(syncid, player.inventory, terminal));
         }));
     }
 }

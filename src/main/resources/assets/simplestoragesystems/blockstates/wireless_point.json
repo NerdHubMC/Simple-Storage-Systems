@@ -1,0 +1,11 @@
+{
+  "multipart": [
+    {"apply": {"model": "simplestoragesystems:block/wireless_point" }},
+    {"when": { "down": "true"}, "apply": { "model": "simplestoragesystems:block/connected_wireless_point", "x": 180 }},
+    { "when": { "up": "true" }, "apply": { "model": "simplestoragesystems:block/connected_wireless_point" } },
+    { "when": { "south": "true" }, "apply": { "model": "simplestoragesystems:block/connected_wireless_point", "x": 270 } },
+    { "when": { "north": "true" }, "apply": { "model": "simplestoragesystems:block/connected_wireless_point", "x": 90 } },
+    { "when": { "west": "true" }, "apply": { "model": "simplestoragesystems:block/connected_wireless_point", "x": 90, "y": 270 } },
+    { "when": { "east": "true" }, "apply": { "model": "simplestoragesystems:block/connected_wireless_point", "x": 90, "y": 90 } }
+  ]
+}

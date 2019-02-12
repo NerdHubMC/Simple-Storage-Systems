@@ -3,6 +3,7 @@
   "block.simplestoragesystems.storage_bay" : "Storage Bay",
   "block.simplestoragesystems.controller" : "Storage Controller",
   "block.simplestoragesystems.terminal" : "Terminal",
+  "block.simplestoragesystems.wireless_point" : "Wireless Storage Point",
   "item.simplestoragesystems.storage_cell" : "Storage Cell",
   "item.simplestoragesystems.storage_cell_4" : "Storage Cell x4",
   "item.simplestoragesystems.storage_cell_16" : "Storage Cell x16",
