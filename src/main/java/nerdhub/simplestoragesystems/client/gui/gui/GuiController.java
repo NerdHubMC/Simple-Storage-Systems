@@ -6,6 +6,7 @@ import nerdhub.simplestoragesystems.tiles.components.BlockEntityController;
 import net.minecraft.client.gui.Screen;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.util.Identifier;
+import org.lwjgl.glfw.GLFW;
 
 public class GuiController extends Screen {
 
@@ -40,7 +41,6 @@ public class GuiController extends Screen {
         drawTexturedRect(left, top, 0, 0, screenWidth, screenHeight);
 
         renderEnergy();
-        String name = "Storage Controller";
         this.fontRenderer.draw(name, (float)(this.width / 2 - this.fontRenderer.getStringWidth(name) / 2), top + 3, 4210752);
 
         if(this.isPointWithinBounds(10, 13, 16, 60, i, i1)) {
@@ -51,6 +51,16 @@ public class GuiController extends Screen {
     @Override
     public boolean isPauseScreen() {
         return false;
+    }
+
+    @Override
+    public boolean keyPressed(int int_1, int int_2, int int_3) {
+        if (int_1 == GLFW.GLFW_KEY_E) {
+            this.close();
+            return true;
+        } else {
+            return super.keyPressed(int_1, int_2, int_3);
+        }
     }
 
     public void renderEnergy() {
