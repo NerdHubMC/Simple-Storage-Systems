@@ -41,6 +41,11 @@ public class BlockTerminal extends BlockWithEntityBase {
     @Override
     public boolean activate(BlockState blockState, World world, BlockPos blockPos, PlayerEntity player, Hand hand, BlockHitResult blockHitResult) {
         if (!world.isClient) {
+            BlockEntityTerminal terminal = (BlockEntityTerminal) world.getBlockEntity(blockPos);
+            if(terminal.getControllerEntity() != null) {
+                terminal.getControllerEntity().cacheStorageBayLists();
+            }
+
             ContainerProviderRegistry.INSTANCE.openContainer(ModBlockEntities.TERMINAL_CONTAINER, player, buf -> buf.writeBlockPos(blockPos));
         }
 

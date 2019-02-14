@@ -122,12 +122,17 @@ public class BlockEntityController extends BlockEntityEnergyBase implements IEne
 
         for (BlockPos entity : storageBayPositions) {
             BlockEntityStorageBay storageBay = (BlockEntityStorageBay) world.getBlockEntity(entity);
-            for (ItemStack stack : storageBay.getStoredItems()) {
-                list.add(new SimpleItemStack(stack));
-            }
+            list.addAll(storageBay.getCachedStorageList());
         }
 
         return list;
+    }
+
+    public void cacheStorageBayLists() {
+        for (BlockPos entity : storageBayPositions) {
+            BlockEntityStorageBay storageBay = (BlockEntityStorageBay) world.getBlockEntity(entity);
+            storageBay.cacheStoredItems();
+        }
     }
 
     public void addComponent(BlockEntity entity, BlockPos entityPos) {

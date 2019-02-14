@@ -2,6 +2,8 @@ package nerdhub.simplestoragesystems.tiles.components;
 
 import nerdhub.simplestoragesystems.api.EnumComponentTypes;
 import nerdhub.simplestoragesystems.api.INetworkComponent;
+import nerdhub.simplestoragesystems.api.ISimpleItemStack;
+import nerdhub.simplestoragesystems.api.SimpleItemStack;
 import nerdhub.simplestoragesystems.items.ItemStorageCell;
 import nerdhub.simplestoragesystems.registry.ModBlockEntities;
 import nerdhub.simplestoragesystems.tiles.BlockEntityBase;
@@ -25,6 +27,8 @@ import java.util.List;
 public class BlockEntityStorageBay extends BlockEntityBase implements SidedInventory, INetworkComponent {
 
     public DefaultedList<ItemStack> inventory = DefaultedList.create(10, ItemStack.EMPTY);
+    //Cache items once terminal is opened for the first time or items are removed/added
+    private List<ISimpleItemStack> cachedStorageList = null;
     public boolean isLinked = false;
     public BlockPos controllerPos = null;
 
@@ -53,23 +57,32 @@ public class BlockEntityStorageBay extends BlockEntityBase implements SidedInven
         if(controllerPos != null) {
             tag.put("controllerPos", TagHelper.serializeBlockPos(controllerPos));
         }
+
         return tag;
     }
 
-    public List<ItemStack> getStoredItems() {
-        List<ItemStack> items = new ArrayList<>();
+    public List<ISimpleItemStack> getCachedStorageList() {
+        if(this.cachedStorageList == null || this.cachedStorageList.size() <= 0) {
+            cacheStoredItems();
+        }
+
+        return cachedStorageList;
+    }
+
+    public void cacheStoredItems() {
+        this.cachedStorageList = new ArrayList<>();
+        this.cachedStorageList.clear();
+
         for (int i : getInvAvailableSlots(null)) {
             ItemStack cellStack = inventory.get(i);
             if(!cellStack.isEmpty() && cellStack.getTag() != null && cellStack.getTag().containsKey("data")) {
                 ListTag dataList = cellStack.getTag().getList("data", NbtType.COMPOUND);
 
                 for (Tag tag : dataList) {
-                    items.add(ItemStack.fromTag((CompoundTag) tag));
+                    this.cachedStorageList.add(new SimpleItemStack(ItemStack.fromTag((CompoundTag) tag)));
                 }
             }
         }
-
-        return items;
     }
 
     public int getStoredItemsCount() {
@@ -89,6 +102,7 @@ public class BlockEntityStorageBay extends BlockEntityBase implements SidedInven
             if(canStoreInCell(i, stack)) {
                 if(!simulate)
                     this.writeStackToCell(i, stack);
+                    this.cacheStoredItems();
 
                 return true;
             }
