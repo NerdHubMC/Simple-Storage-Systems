@@ -1,7 +1,7 @@
 package nerdhub.simplestoragesystems.items;
 
 import nerdhub.simplestoragesystems.SimpleStorageSystems;
-import nerdhub.simplestoragesystems.api.ILinkerComponent;
+import nerdhub.simplestoragesystems.api.network.ILinkerComponent;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipOptions;
 import net.minecraft.entity.player.PlayerEntity;

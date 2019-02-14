@@ -1,7 +1,7 @@
 package nerdhub.simplestoragesystems.blocks.components;
 
 import nerdhub.simplestoragesystems.SimpleStorageSystems;
-import nerdhub.simplestoragesystems.api.INetworkComponent;
+import nerdhub.simplestoragesystems.api.network.INetworkComponent;
 import nerdhub.simplestoragesystems.blocks.BlockWithEntityBase;
 import nerdhub.simplestoragesystems.tiles.components.BlockEntityWirelessPoint;
 import nerdhub.simplestoragesystems.utils.ComponentHelper;
@@ -48,7 +48,7 @@ public class BlockWirelessPoint extends BlockWithEntityBase {
             point.connectedComponents.clear();
             for (BlockPos entityPos : getAdjacentTiles(context.getWorld(), context.getBlockPos())) {
                 if(context.getWorld().getBlockEntity(entityPos) instanceof INetworkComponent && point.getControllerPos() != null) {
-                    ComponentHelper.linkComponent(context.getWorld(), (INetworkComponent) context.getWorld().getBlockEntity(entityPos), point.getControllerPos(), true);
+                    ComponentHelper.linkComponent(context.getWorld(), (INetworkComponent) context.getWorld().getBlockEntity(entityPos), point.getControllerPos());
                     point.addComponent(entityPos);
                 }
             }
@@ -64,7 +64,7 @@ public class BlockWirelessPoint extends BlockWithEntityBase {
         if(point.getControllerPos() != null) {
             for (BlockPos entityPos : getAdjacentTiles(world, blockPos)) {
                 if(world.getBlockEntity(entityPos) instanceof INetworkComponent && point.getControllerPos() != null) {
-                    ComponentHelper.linkComponent(world, (INetworkComponent) world.getBlockEntity(entityPos), point.getControllerPos(), true);
+                    ComponentHelper.linkComponent(world, (INetworkComponent) world.getBlockEntity(entityPos), point.getControllerPos());
                     point.addComponent(entityPos);
                 }
             }
@@ -100,7 +100,7 @@ public class BlockWirelessPoint extends BlockWithEntityBase {
         super.onBreak(world, pos, state, playerEntity);
         for (BlockPos entityPos : getAdjacentTiles(world, pos)) {
             if(world.getBlockEntity(entityPos) instanceof INetworkComponent) {
-                ComponentHelper.removeComponentLinks(world, (INetworkComponent) world.getBlockEntity(entityPos));
+                ComponentHelper.removeComponentLinks((INetworkComponent) world.getBlockEntity(entityPos));
             }
         }
     }

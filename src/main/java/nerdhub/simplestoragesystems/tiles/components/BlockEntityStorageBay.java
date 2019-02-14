@@ -1,9 +1,9 @@
 package nerdhub.simplestoragesystems.tiles.components;
 
-import nerdhub.simplestoragesystems.api.EnumComponentTypes;
-import nerdhub.simplestoragesystems.api.INetworkComponent;
-import nerdhub.simplestoragesystems.api.ISimpleItemStack;
-import nerdhub.simplestoragesystems.api.SimpleItemStack;
+import nerdhub.simplestoragesystems.api.network.EnumComponentTypes;
+import nerdhub.simplestoragesystems.api.network.INetworkComponent;
+import nerdhub.simplestoragesystems.api.item.ICustomStorageStack;
+import nerdhub.simplestoragesystems.api.item.SimpleStorageStack;
 import nerdhub.simplestoragesystems.items.ItemStorageCell;
 import nerdhub.simplestoragesystems.registry.ModBlockEntities;
 import nerdhub.simplestoragesystems.tiles.BlockEntityBase;
@@ -28,8 +28,7 @@ public class BlockEntityStorageBay extends BlockEntityBase implements SidedInven
 
     public DefaultedList<ItemStack> inventory = DefaultedList.create(10, ItemStack.EMPTY);
     //Cache items once terminal is opened for the first time or items are removed/added
-    private List<ISimpleItemStack> cachedStorageList = null;
-    public boolean isLinked = false;
+    private List<ICustomStorageStack> cachedStorageList = null;
     public BlockPos controllerPos = null;
 
     public BlockEntityStorageBay() {
@@ -41,7 +40,6 @@ public class BlockEntityStorageBay extends BlockEntityBase implements SidedInven
         super.fromTag(tag);
         inventory = DefaultedList.create(10, ItemStack.EMPTY);
         InventoryUtil.deserialize(tag, this.inventory);
-        isLinked = tag.getBoolean("isLinked");
 
         if(tag.containsKey("controllerPos")) {
             controllerPos = TagHelper.deserializeBlockPos(tag.getCompound("controllerPos"));
@@ -52,7 +50,6 @@ public class BlockEntityStorageBay extends BlockEntityBase implements SidedInven
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
         InventoryUtil.serialize(tag, this.inventory);
-        tag.putBoolean("isLinked", this.isLinked);
 
         if(controllerPos != null) {
             tag.put("controllerPos", TagHelper.serializeBlockPos(controllerPos));
@@ -61,7 +58,7 @@ public class BlockEntityStorageBay extends BlockEntityBase implements SidedInven
         return tag;
     }
 
-    public List<ISimpleItemStack> getCachedStorageList() {
+    public List<ICustomStorageStack> getCachedStorageList() {
         if(this.cachedStorageList == null || this.cachedStorageList.size() <= 0) {
             cacheStoredItems();
         }
@@ -79,10 +76,14 @@ public class BlockEntityStorageBay extends BlockEntityBase implements SidedInven
                 ListTag dataList = cellStack.getTag().getList("data", NbtType.COMPOUND);
 
                 for (Tag tag : dataList) {
-                    this.cachedStorageList.add(new SimpleItemStack(ItemStack.fromTag((CompoundTag) tag)));
+                    this.cachedStorageList.add(new SimpleStorageStack(ItemStack.fromTag((CompoundTag) tag)));
                 }
             }
         }
+    }
+
+    public void cacheItem(ItemStack stack) {
+        this.cachedStorageList.add(new SimpleStorageStack(stack));
     }
 
     public int getStoredItemsCount() {
@@ -102,7 +103,7 @@ public class BlockEntityStorageBay extends BlockEntityBase implements SidedInven
             if(canStoreInCell(i, stack)) {
                 if(!simulate)
                     this.writeStackToCell(i, stack);
-                    this.cacheStoredItems();
+                    this.cacheItem(stack);
 
                 return true;
             }
@@ -217,12 +218,6 @@ public class BlockEntityStorageBay extends BlockEntityBase implements SidedInven
     @Override
     public EnumComponentTypes getComponentType() {
         return EnumComponentTypes.STORAGE_BAY;
-    }
-
-    @Override
-    public void setIsLinked(boolean isLinked) {
-        this.isLinked = isLinked;
-        this.updateEntity();
     }
 
     @Override

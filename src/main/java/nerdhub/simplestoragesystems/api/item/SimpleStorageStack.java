@@ -1,4 +1,4 @@
-package nerdhub.simplestoragesystems.api;
+package nerdhub.simplestoragesystems.api.item;
 
 import nerdhub.simplestoragesystems.client.gui.gui.ContainerGuiBase;
 import net.fabricmc.loader.FabricLoader;
@@ -11,7 +11,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
-public class SimpleItemStack implements ISimpleItemStack {
+public class SimpleStorageStack implements ICustomStorageStack {
 
     private DecimalFormat formatterWithUnits = new DecimalFormat("####0.#", DecimalFormatSymbols.getInstance(Locale.US));
     private DecimalFormat formatter = new DecimalFormat("#,###", DecimalFormatSymbols.getInstance(Locale.US));
@@ -20,12 +20,12 @@ public class SimpleItemStack implements ISimpleItemStack {
     private boolean craftingObject;
     private String modId;
     private String modName;
-    private int size;
+    private int amount;
 
-    public SimpleItemStack(ItemStack stack) {
+    public SimpleStorageStack(ItemStack stack) {
         formatterWithUnits.setRoundingMode(RoundingMode.DOWN);
         this.stack = stack;
-        this.size = stack.getAmount();
+        this.amount = stack.getAmount();
     }
 
     @Override
@@ -69,11 +69,6 @@ public class SimpleItemStack implements ISimpleItemStack {
     }
 
     @Override
-    public int getSize() {
-        return isCraftingObject() ? 0 : size;
-    }
-
-    @Override
     public String getFormattedAmount() {
         return formatter.format(getAmount());
     }
@@ -82,8 +77,8 @@ public class SimpleItemStack implements ISimpleItemStack {
     public void draw(ContainerGuiBase gui, int x, int y) {
         String text = null;
 
-        if(size > 1) {
-            text = formatWithUnits((long) getSize());
+        if(amount > 1) {
+            text = formatWithUnits((long) getAmount());
         }
 
         gui.drawItem(x, y, stack, text);
@@ -105,17 +100,17 @@ public class SimpleItemStack implements ISimpleItemStack {
 
     @Override
     public void addAmount(int amount) {
-        this.size += amount;
+        this.amount += amount;
     }
 
     @Override
     public void setAmount(int amount) {
-        this.size = amount;
+        this.amount = amount;
     }
 
     @Override
     public int getAmount() {
-        return size;
+        return isCraftingObject() ? 0 : amount;
     }
 
     public static String getModName(String modid) {
@@ -132,7 +127,7 @@ public class SimpleItemStack implements ISimpleItemStack {
             float qtyShort = (float) qty / 1_000_000F;
 
             if (qty >= 100_000_000) {
-                qtyShort = Math.round(qtyShort); // XXX.XM looks weird.
+                qtyShort = Math.round(qtyShort);
             }
 
             return formatterWithUnits.format(qtyShort) + "M";
@@ -140,7 +135,7 @@ public class SimpleItemStack implements ISimpleItemStack {
             float qtyShort = (float) qty / 1000F;
 
             if (qty >= 100_000) {
-                qtyShort = Math.round(qtyShort); // XXX.XK looks weird.
+                qtyShort = Math.round(qtyShort);
             }
 
             return formatterWithUnits.format(qtyShort) + "K";

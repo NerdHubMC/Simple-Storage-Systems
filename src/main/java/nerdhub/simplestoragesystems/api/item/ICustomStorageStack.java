@@ -1,9 +1,9 @@
-package nerdhub.simplestoragesystems.api;
+package nerdhub.simplestoragesystems.api.item;
 
 import nerdhub.simplestoragesystems.client.gui.gui.ContainerGuiBase;
 import net.minecraft.item.ItemStack;
 
-public interface ISimpleItemStack {
+public interface ICustomStorageStack {
 
     ItemStack getStack();
 
@@ -12,8 +12,6 @@ public interface ISimpleItemStack {
     String getModid();
 
     String getModName();
-
-    int getSize();
 
     String getFormattedAmount();
 

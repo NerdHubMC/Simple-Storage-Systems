@@ -1,8 +1,8 @@
 package nerdhub.simplestoragesystems.tiles.components;
 
-import nerdhub.simplestoragesystems.api.EnumComponentTypes;
-import nerdhub.simplestoragesystems.api.ILinkerComponent;
-import nerdhub.simplestoragesystems.api.INetworkComponent;
+import nerdhub.simplestoragesystems.api.network.EnumComponentTypes;
+import nerdhub.simplestoragesystems.api.network.ILinkerComponent;
+import nerdhub.simplestoragesystems.api.network.INetworkComponent;
 import nerdhub.simplestoragesystems.blocks.components.BlockWirelessPoint;
 import nerdhub.simplestoragesystems.registry.ModBlockEntities;
 import nerdhub.simplestoragesystems.tiles.BlockEntityBase;
@@ -24,7 +24,6 @@ public class BlockEntityWirelessPoint extends BlockEntityBase implements ILinker
 
     private BlockPos controllerPos;
     public List<BlockPos> connectedComponents = new ArrayList<>();
-    public boolean isLinked;
 
     public BlockEntityWirelessPoint() {
         super(ModBlockEntities.WIRELESS_POINT);
@@ -44,8 +43,6 @@ public class BlockEntityWirelessPoint extends BlockEntityBase implements ILinker
                 connectedComponents.add(TagHelper.deserializeBlockPos((CompoundTag) posTag));
             }
         }
-
-        this.isLinked = tag.getBoolean("isLinked");
     }
 
     @Override
@@ -64,7 +61,6 @@ public class BlockEntityWirelessPoint extends BlockEntityBase implements ILinker
             tag.put("connectedComponents", tags);
         }
 
-        tag.putBoolean("isLinked", isLinked);
         return tag;
     }
 
@@ -89,17 +85,12 @@ public class BlockEntityWirelessPoint extends BlockEntityBase implements ILinker
         return EnumComponentTypes.WIRELESS_POINT;
     }
 
-    @Override
-    public void setIsLinked(boolean isLinked) {
-        this.isLinked = isLinked;
-    }
-
     public void setControllerPos(BlockPos controllerPos) {
         this.controllerPos = controllerPos;
 
         for (BlockPos entityPos : BlockWirelessPoint.getAdjacentTiles(world, pos)) {
             if(world.getBlockEntity(entityPos) instanceof INetworkComponent) {
-                ComponentHelper.linkComponent(world, (INetworkComponent) world.getBlockEntity(entityPos), controllerPos, true);
+                ComponentHelper.linkComponent(world, (INetworkComponent) world.getBlockEntity(entityPos), controllerPos);
                 this.addComponent(entityPos);
             }
         }

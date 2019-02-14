@@ -42,7 +42,7 @@ public class BlockTerminal extends BlockWithEntityBase {
     public boolean activate(BlockState blockState, World world, BlockPos blockPos, PlayerEntity player, Hand hand, BlockHitResult blockHitResult) {
         if (!world.isClient) {
             BlockEntityTerminal terminal = (BlockEntityTerminal) world.getBlockEntity(blockPos);
-            if(terminal.getControllerEntity() != null) {
+            if(terminal.isLinked()) {
                 terminal.getControllerEntity().cacheStorageBayLists();
             }
 

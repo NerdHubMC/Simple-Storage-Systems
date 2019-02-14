@@ -1,7 +1,7 @@
 package nerdhub.simplestoragesystems.tiles.components;
 
-import nerdhub.simplestoragesystems.api.EnumComponentTypes;
-import nerdhub.simplestoragesystems.api.INetworkComponent;
+import nerdhub.simplestoragesystems.api.network.EnumComponentTypes;
+import nerdhub.simplestoragesystems.api.network.INetworkComponent;
 import nerdhub.simplestoragesystems.registry.ModBlockEntities;
 import nerdhub.simplestoragesystems.tiles.BlockEntityBase;
 import net.minecraft.nbt.CompoundTag;
@@ -10,7 +10,6 @@ import net.minecraft.util.math.BlockPos;
 
 public class BlockEntityTerminal extends BlockEntityBase implements INetworkComponent {
 
-    public boolean isLinked = false;
     public BlockPos controllerPos;
 
     public BlockEntityTerminal() {
@@ -20,7 +19,6 @@ public class BlockEntityTerminal extends BlockEntityBase implements INetworkComp
     @Override
     public void fromTag(CompoundTag tag) {
         super.fromTag(tag);
-        isLinked = tag.getBoolean("isLinked");
 
         if(tag.containsKey("controllerPos")) {
             controllerPos = TagHelper.deserializeBlockPos(tag.getCompound("controllerPos"));
@@ -30,7 +28,6 @@ public class BlockEntityTerminal extends BlockEntityBase implements INetworkComp
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
-        tag.putBoolean("isLinked", isLinked);
         if(controllerPos != null) {
             tag.put("controllerPos", TagHelper.serializeBlockPos(controllerPos));
         }
@@ -44,12 +41,6 @@ public class BlockEntityTerminal extends BlockEntityBase implements INetworkComp
     @Override
     public EnumComponentTypes getComponentType() {
         return EnumComponentTypes.TERMINAL;
-    }
-
-    @Override
-    public void setIsLinked(boolean isLinked) {
-        this.isLinked = isLinked;
-        this.updateEntity();
     }
 
     @Override

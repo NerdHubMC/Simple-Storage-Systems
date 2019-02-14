@@ -138,7 +138,7 @@ public class GuiTerminal extends ContainerGuiBase {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int clickedButton) {
         super.mouseClicked(mouseX, mouseY, clickedButton);
-        if (tile.getControllerEntity() != null) {
+        if (tile.isLinked()) {
             ItemStack stack = MinecraftClient.getInstance().player.inventory.getCursorStack();
             int x = 8;
             int y = 26;
@@ -195,7 +195,7 @@ public class GuiTerminal extends ContainerGuiBase {
     }
 
     public void updateItemsView() {
-        if (tile.getControllerEntity() != null) {
+        if (tile.isLinked()) {
             this.updateItems();
             view.sort();
         }

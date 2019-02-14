@@ -2,7 +2,10 @@ package nerdhub.simplestoragesystems.tiles.components;
 
 import abused_master.energy.EnergyStorage;
 import abused_master.energy.IEnergyReceiver;
-import nerdhub.simplestoragesystems.api.*;
+import nerdhub.simplestoragesystems.api.item.ICustomStorageStack;
+import nerdhub.simplestoragesystems.api.network.EnumComponentTypes;
+import nerdhub.simplestoragesystems.api.network.ILinkerComponent;
+import nerdhub.simplestoragesystems.api.network.INetworkComponent;
 import nerdhub.simplestoragesystems.registry.ModBlockEntities;
 import nerdhub.simplestoragesystems.tiles.BlockEntityEnergyBase;
 import net.fabricmc.fabric.api.util.NbtType;
@@ -19,7 +22,7 @@ import net.minecraft.util.math.BlockPos;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BlockEntityController extends BlockEntityEnergyBase implements IEnergyReceiver, ILinkerComponent {
+public class BlockEntityController extends BlockEntityEnergyBase implements IEnergyReceiver, ILinkerComponent, INetworkComponent {
 
     public EnergyStorage storage = new EnergyStorage(100000);
     public List<BlockPos> storageBayPositions = new ArrayList<>();
@@ -117,8 +120,8 @@ public class BlockEntityController extends BlockEntityEnergyBase implements IEne
         return false;
     }
 
-    public List<ISimpleItemStack> getStoredStacks() {
-        List<ISimpleItemStack> list = new ArrayList<>();
+    public List<ICustomStorageStack> getStoredStacks() {
+        List<ICustomStorageStack> list = new ArrayList<>();
 
         for (BlockPos entity : storageBayPositions) {
             BlockEntityStorageBay storageBay = (BlockEntityStorageBay) world.getBlockEntity(entity);
@@ -187,5 +190,19 @@ public class BlockEntityController extends BlockEntityEnergyBase implements IEne
         }
 
         this.updateEntity();
+    }
+
+    @Override
+    public EnumComponentTypes getComponentType() {
+        return EnumComponentTypes.CONTROLLER;
+    }
+
+    @Override
+    public void setControllerPos(BlockPos pos) {
+    }
+
+    @Override
+    public BlockEntityController getControllerEntity() {
+        return this;
     }
 }

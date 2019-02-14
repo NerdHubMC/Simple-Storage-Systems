@@ -1,4 +1,4 @@
-package nerdhub.simplestoragesystems.api;
+package nerdhub.simplestoragesystems.api.network;
 
 public enum EnumComponentTypes {
     CONTROLLER(false),

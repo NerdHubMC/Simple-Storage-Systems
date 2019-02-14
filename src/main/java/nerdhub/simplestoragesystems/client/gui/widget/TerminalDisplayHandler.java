@@ -1,7 +1,7 @@
 package nerdhub.simplestoragesystems.client.gui.widget;
 
 import com.google.common.collect.Lists;
-import nerdhub.simplestoragesystems.api.ISimpleItemStack;
+import nerdhub.simplestoragesystems.api.item.ICustomStorageStack;
 import nerdhub.simplestoragesystems.client.gui.gui.GuiTerminal;
 import net.minecraft.item.ItemStack;
 
@@ -10,7 +10,7 @@ import java.util.List;
 public class TerminalDisplayHandler {
 
     protected GuiTerminal gui;
-    public List<ISimpleItemStack> stacks;
+    public List<ICustomStorageStack> stacks;
 
     public TerminalDisplayHandler(GuiTerminal gui) {
         this.gui = gui;
@@ -18,19 +18,19 @@ public class TerminalDisplayHandler {
     }
 
     public void sort() {
-        if (gui.tile.getControllerEntity() != null) {
+        if (gui.tile.isLinked()) {
             stacks.sort((left, right) -> right.getName().compareTo(left.getName()));
         }
 
         this.gui.updateScrollbar();
     }
 
-    public void setStacks(List<ISimpleItemStack> simpleStacksList) {
+    public void setStacks(List<ICustomStorageStack> simpleStacksList) {
         stacks.clear();
 
         loop:
-        for (ISimpleItemStack stack : simpleStacksList) {
-            for (ISimpleItemStack listStack : stacks) {
+        for (ICustomStorageStack stack : simpleStacksList) {
+            for (ICustomStorageStack listStack : stacks) {
                 if (ItemStack.areEqual(stack.getStack(), listStack.getStack())) {
                     listStack.addAmount(stack.getAmount());
                     continue loop;
