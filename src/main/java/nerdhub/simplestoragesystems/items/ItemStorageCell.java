@@ -25,7 +25,7 @@ public class ItemStorageCell extends ItemBase {
 
     @Override
     public void buildTooltip(ItemStack stack, @Nullable World world, List<TextComponent> list, TooltipOptions tooltipOptions) {
-        int dataUsed = stack.getTag() == null ? 0 : stack.getTag().getInt("stored");
+        int dataUsed = stack.getTag() == null ? 0 : stack.getTag().getInt("amount");
         list.add(new StringTextComponent("Data Used: " + dataUsed + " / " + type.getStorageCapacity() + " bytes"));
     }
 }

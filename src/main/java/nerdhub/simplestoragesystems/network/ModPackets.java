@@ -17,11 +17,11 @@ public class ModPackets {
             BlockPos pos = packetByteBuf.readBlockPos();
             ItemStack stack = packetByteBuf.readItemStack();
 
-            if(context.getPlayer() != null && context.getPlayer().world != null) {
+            if (context.getPlayer() != null && context.getPlayer().world != null) {
                 context.getTaskQueue().execute(() -> {
                     BlockEntity blockEntity = context.getPlayer().world.getBlockEntity(pos);
 
-                    if(blockEntity instanceof BlockEntityController) {
+                    if (blockEntity instanceof BlockEntityController) {
                         ((BlockEntityController) blockEntity).storeStack(stack, false);
                         context.getPlayer().inventory.setCursorStack(ItemStack.EMPTY);
                     }

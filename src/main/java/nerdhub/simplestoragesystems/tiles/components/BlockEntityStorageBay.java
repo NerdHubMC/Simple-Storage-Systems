@@ -8,18 +8,15 @@ import nerdhub.simplestoragesystems.tiles.BlockEntityBase;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.SidedInventory;
-import net.minecraft.item.ItemProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.DefaultedList;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.InventoryUtil;
 import net.minecraft.util.TagHelper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.registry.Registry;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -62,11 +59,11 @@ public class BlockEntityStorageBay extends BlockEntityBase implements SidedInven
     public List<ItemStack> getStoredItems() {
         List<ItemStack> items = new ArrayList<>();
         for (int i : getInvAvailableSlots(null)) {
-            ItemStack inventoryStack = inventory.get(i);
-            if(!inventoryStack.isEmpty() && inventoryStack.getTag() != null && inventoryStack.getTag().containsKey("data")) {
-                ListTag dataList = inventoryStack.getTag().getList("data", NbtType.COMPOUND);
+            ItemStack cellStack = inventory.get(i);
+            if(!cellStack.isEmpty() && cellStack.getTag() != null && cellStack.getTag().containsKey("data")) {
+                ListTag dataList = cellStack.getTag().getList("data", NbtType.COMPOUND);
                 for (Tag tag : dataList) {
-                    items.add(new ItemStack((ItemProvider) tag));
+                    items.add(ItemStack.fromTag((CompoundTag) tag));
                 }
             }
         }
@@ -78,8 +75,8 @@ public class BlockEntityStorageBay extends BlockEntityBase implements SidedInven
         int count = 0;
         for (int i : getInvAvailableSlots(null)) {
             ItemStack inventoryStack = inventory.get(i);
-            if(!inventoryStack.isEmpty() && inventoryStack.getTag() != null && inventoryStack.getTag().containsKey("stored")) {
-                count += inventoryStack.getTag().getInt("stored");
+            if(!inventoryStack.isEmpty() && inventoryStack.getTag() != null && inventoryStack.getTag().containsKey("amount")) {
+                count += inventoryStack.getTag().getInt("amount");
             }
         }
 
@@ -100,35 +97,35 @@ public class BlockEntityStorageBay extends BlockEntityBase implements SidedInven
     }
 
     private void writeStackToCell(int slot, ItemStack stack) {
-        ItemStack inventoryStack = inventory.get(slot);
+        ItemStack cellStack = inventory.get(slot);
 
-        CompoundTag tag = inventoryStack.getTag();
+        CompoundTag tag = cellStack.getTag();
         ListTag dataList = tag.getList("data", NbtType.COMPOUND);
 
-        tag.putInt("stored", tag.getInt("stored") + stack.getAmount());
+        tag.putInt("amount", tag.getInt("amount") + stack.getAmount());
         dataList.add(getStackTag(stack));
         tag.put("data", dataList);
 
-        inventoryStack.setTag(tag);
-        inventory.set(slot, inventoryStack);
+        cellStack.setTag(tag);
+        inventory.set(slot, cellStack);
     }
 
     private boolean canStoreInCell(int slot, ItemStack stack) {
-        ItemStack inventoryStack = inventory.get(slot);
-        if(inventoryStack.isEmpty() || !(inventoryStack.getItem() instanceof ItemStorageCell)) {
+        ItemStack cellStack = inventory.get(slot);
+        if(cellStack.isEmpty() || !(cellStack.getItem() instanceof ItemStorageCell)) {
             return false;
-        }else if(inventoryStack.getTag() != null) {
-            if(inventoryStack.getTag().containsKey("stored") && (inventoryStack.getTag().getInt("stored") + stack.getAmount()) > ((ItemStorageCell) inventoryStack.getItem()).getType().getStorageCapacity()) {
+        }else if(cellStack.getTag() != null) {
+            if(cellStack.getTag().containsKey("amount") && (cellStack.getTag().getInt("amount") + stack.getAmount()) > ((ItemStorageCell) cellStack.getItem()).getType().getStorageCapacity()) {
                 return false;
             }
         }
 
-        if(inventoryStack.getTag() == null) {
+        if(cellStack.getTag() == null) {
             CompoundTag tag = new CompoundTag();
-            tag.putInt("stored", 0);
+            tag.putInt("amount", 0);
             tag.put("data", new ListTag());
-            inventoryStack.setTag(tag);
-            inventory.set(slot, inventoryStack);
+            cellStack.setTag(tag);
+            inventory.set(slot, cellStack);
             this.updateEntity();
         }
 
@@ -136,15 +133,7 @@ public class BlockEntityStorageBay extends BlockEntityBase implements SidedInven
     }
 
     private CompoundTag getStackTag(ItemStack stack) {
-        CompoundTag tag = new CompoundTag();
-        Identifier identifier_1 = Registry.ITEM.getId(stack.getItem());
-        tag.putString("id", identifier_1 == null ? "minecraft:air" : identifier_1.toString());
-        tag.putByte("Count", (byte) stack.getAmount());
-        if(stack.getTag() != null) {
-            tag.put("tag", stack.getTag());
-        }
-
-        return tag;
+        return stack.toTag(new CompoundTag());
     }
 
     @Override

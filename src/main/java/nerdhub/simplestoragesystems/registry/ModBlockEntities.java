@@ -24,8 +24,7 @@ public class ModBlockEntities {
     public static BlockEntityType<BlockEntityTerminal> TERMINAL;
     public static BlockEntityType<BlockEntityWirelessPoint> WIRELESS_POINT;
 
-    //Guis
-    public static final Identifier CONTROLLER_CONTAINER = new Identifier(SimpleStorageSystems.MODID, "controller_container");
+    //GUIs
     public static final Identifier STORAGE_BAY_CONTAINER = new Identifier(SimpleStorageSystems.MODID, "storage_bay_container");
     public static final Identifier TERMINAL_CONTAINER = new Identifier(SimpleStorageSystems.MODID, "terminal_container");
 

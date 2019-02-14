@@ -25,5 +25,9 @@ public interface ISimpleItemStack {
 
     void setDisplayText(boolean display);
 
-    public int getHash();
+    void addAmount(int amount);
+
+    void setAmount(int amount);
+
+    int getAmount();
 }

@@ -1,17 +1,14 @@
 package nerdhub.simplestoragesystems.api;
 
-import io.netty.buffer.ByteBuf;
 import nerdhub.simplestoragesystems.client.gui.gui.ContainerGuiBase;
 import net.fabricmc.loader.FabricLoader;
 import net.fabricmc.loader.ModContainer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipOptions;
 import net.minecraft.client.resource.language.I18n;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.TextComponent;
 import net.minecraft.text.TextFormat;
-import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.registry.Registry;
 
 import java.math.RoundingMode;
@@ -26,25 +23,18 @@ public class SimpleItemStack implements ISimpleItemStack {
 
     private DecimalFormat formatterWithUnits = new DecimalFormat("####0.#", DecimalFormatSymbols.getInstance(Locale.US));
     private DecimalFormat formatter = new DecimalFormat("#,###", DecimalFormatSymbols.getInstance(Locale.US));
-    private int hash;
     private ItemStack stack;
     private String name;
     private boolean displayText;
     private String modId;
     private String modName;
     private String tooltip;
+    private int size;
 
     public SimpleItemStack(ItemStack stack) {
         formatterWithUnits.setRoundingMode(RoundingMode.DOWN);
         this.stack = stack;
-    }
-
-    public SimpleItemStack(ByteBuf buf) {
-        formatterWithUnits.setRoundingMode(RoundingMode.DOWN);
-        this.stack = new ItemStack(Item.byRawId(buf.readInt()), buf.readInt());
-        stack.setTag(new PacketByteBuf(buf).readCompoundTag());
-        this.hash = buf.readInt();
-        setDisplayText(buf.readBoolean());
+        this.size = stack.getAmount();
     }
 
     @Override
@@ -98,7 +88,7 @@ public class SimpleItemStack implements ISimpleItemStack {
 
     @Override
     public int getSize() {
-        return doesDisplayText() ? 0 : stack.getAmount();
+        return doesDisplayText() ? 0 : size;
     }
 
     @Override
@@ -112,11 +102,11 @@ public class SimpleItemStack implements ISimpleItemStack {
 
         if(displayText) {
             text = I18n.translate("gui.simplestoragesystems:craft");
-        }else if(stack.getAmount() > 1) {
+        }else if(size > 1) {
             text = formatWithUnits(getSize());
         }
 
-        gui.drawItem(x, y, stack, true, text);
+        gui.drawItem(x, y, stack, text);
     }
 
     @Override
@@ -131,6 +121,21 @@ public class SimpleItemStack implements ISimpleItemStack {
         if(display) {
             this.stack.setAmount(1);
         }
+    }
+
+    @Override
+    public void addAmount(int amount) {
+        this.size += amount;
+    }
+
+    @Override
+    public void setAmount(int amount) {
+        this.size = amount;
+    }
+
+    @Override
+    public int getAmount() {
+        return size;
     }
 
     public static String getModName(String modid) {
@@ -177,10 +182,5 @@ public class SimpleItemStack implements ISimpleItemStack {
         }
 
         return String.valueOf(qty);
-    }
-
-    @Override
-    public int getHash() {
-        return hash;
     }
 }

@@ -2,9 +2,7 @@ package nerdhub.simplestoragesystems.tiles.components;
 
 import abused_master.energy.EnergyStorage;
 import abused_master.energy.IEnergyReceiver;
-import nerdhub.simplestoragesystems.api.EnumComponentTypes;
-import nerdhub.simplestoragesystems.api.ILinkerComponent;
-import nerdhub.simplestoragesystems.api.INetworkComponent;
+import nerdhub.simplestoragesystems.api.*;
 import nerdhub.simplestoragesystems.registry.ModBlockEntities;
 import nerdhub.simplestoragesystems.tiles.BlockEntityEnergyBase;
 import net.fabricmc.fabric.api.util.NbtType;
@@ -119,6 +117,20 @@ public class BlockEntityController extends BlockEntityEnergyBase implements IEne
         }
 
         return false;
+    }
+
+    public List<ISimpleItemStack> getStoredStacks() {
+        List<ISimpleItemStack> list = new ArrayList<>();
+        if (storageBayPositions.size() > 0) {
+            for (BlockPos entity : storageBayPositions) {
+                BlockEntityStorageBay storageBay = (BlockEntityStorageBay) world.getBlockEntity(entity);
+                for (ItemStack stack : storageBay.getStoredItems()) {
+                    list.add(new SimpleItemStack(stack));
+                }
+            }
+        }
+
+        return list;
     }
 
     public void addComponent(BlockEntity entity, BlockPos entityPos) {
