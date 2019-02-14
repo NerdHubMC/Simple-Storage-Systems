@@ -152,8 +152,19 @@ public class GuiTerminal extends ContainerGuiBase {
                         MinecraftClient.getInstance().getNetworkHandler().getClientConnection().sendPacket(new CustomPayloadServerPacket(ModPackets.PACKET_STORE_STACK, buf));
                         MinecraftClient.getInstance().player.inventory.setCursorStack(ItemStack.EMPTY);
                         MinecraftClient.getInstance().player.containerPlayer.sendContentUpdates();
-                    } else {
+                    } else if(stack.isEmpty() && !view.stacks.get(slotNumber).getStack().isEmpty()) {
 
+                        if(clickedButton == 1) {
+                            //Extract half
+                        }
+
+                        if(clickedButton == 2) {
+                            //Extract only one
+                        }
+
+                        if(isShiftPressed()) {
+                            //Extract shift
+                        }
                     }
                 }
 
