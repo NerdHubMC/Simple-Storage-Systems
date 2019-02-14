@@ -31,15 +31,34 @@ public class TerminalDisplayHandler {
         loop:
         for (ISimpleItemStack stack : simpleStacksList) {
             for (ISimpleItemStack listStack : stacks) {
-                if(ItemStack.areEqual(stack.getStack(), listStack.getStack())) {
+                if (ItemStack.areEqual(stack.getStack(), listStack.getStack())) {
                     listStack.addAmount(stack.getAmount());
                     continue loop;
                 }
             }
 
-            if(!stack.doesDisplayText()) {
+            if (!stack.isCraftingObject() && !stacks.contains(stack)) {
                 stacks.add(stack);
             }
+        }
+    }
+
+    //Copied from ItemStack and modified to not include stack size
+    public boolean areEqual(ItemStack stack1, ItemStack stack2) {
+        if (stack1.isEmpty() && stack2.isEmpty()) {
+            return true;
+        } else {
+            return !stack1.isEmpty() && !stack2.isEmpty() ? isEqual(stack1, stack2) : false;
+        }
+    }
+
+    public boolean isEqual(ItemStack stack1, ItemStack stack2) {
+        if (stack1.getItem() != stack2.getItem()) {
+            return false;
+        } else if (stack1.getTag() == null && stack2.getTag() != null) {
+            return false;
+        } else {
+            return stack1.getTag() == null || stack1.getTag().equals(stack2.getTag());
         }
     }
 }

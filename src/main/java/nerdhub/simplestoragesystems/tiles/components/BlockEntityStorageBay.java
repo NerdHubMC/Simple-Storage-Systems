@@ -62,6 +62,7 @@ public class BlockEntityStorageBay extends BlockEntityBase implements SidedInven
             ItemStack cellStack = inventory.get(i);
             if(!cellStack.isEmpty() && cellStack.getTag() != null && cellStack.getTag().containsKey("data")) {
                 ListTag dataList = cellStack.getTag().getList("data", NbtType.COMPOUND);
+
                 for (Tag tag : dataList) {
                     items.add(ItemStack.fromTag((CompoundTag) tag));
                 }

@@ -13,17 +13,15 @@ public interface ISimpleItemStack {
 
     String getModName();
 
-    String getTooltip();
-
     int getSize();
 
     String getFormattedAmount();
 
     void draw(ContainerGuiBase gui, int x, int y);
 
-    boolean doesDisplayText();
+    boolean isCraftingObject();
 
-    void setDisplayText(boolean display);
+    void setIsCrafingObject(boolean object);
 
     void addAmount(int amount);
 

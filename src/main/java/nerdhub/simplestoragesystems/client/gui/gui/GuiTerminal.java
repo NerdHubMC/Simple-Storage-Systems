@@ -58,11 +58,6 @@ public class GuiTerminal extends ContainerGuiBase {
         super.draw(var1, var2, var3);
         this.drawMousoverTooltip(var1, var2);
 
-        if (isOverSlotWithStack()) {
-            //TODO RENDER TOOLTIP IF MOUSE IS OVER STACK
-            drawHoveringTooltip(view.stacks.get(slotNumber), var1, var2);
-        }
-
         if (scrollbar != null) {
             scrollbar.update(this, var1 - left, var2 - top);
         }
@@ -86,7 +81,7 @@ public class GuiTerminal extends ContainerGuiBase {
             }
 
             if (inBounds(left + x, top + y, 16, 16, mouseX, mouseY)) {
-                int color = -2130706433;
+                int color = 0x80FFFFFF;
 
                 GlStateManager.disableLighting();
                 GlStateManager.disableDepthTest();
@@ -97,6 +92,11 @@ public class GuiTerminal extends ContainerGuiBase {
                 GlStateManager.colorMask(true, true, true, true);
                 GlStateManager.enableLighting();
                 GlStateManager.enableDepthTest();
+
+                if(slot < view.stacks.size() && !view.stacks.get(slot).getStack().isEmpty() && this.client.player.inventory.getCursorStack().isEmpty()) {
+                    drawStackTooltip(view.stacks.get(slot).getStack(), mouseX, mouseY);
+
+                }
             }
 
             slot++;
@@ -153,6 +153,7 @@ public class GuiTerminal extends ContainerGuiBase {
                         MinecraftClient.getInstance().player.inventory.setCursorStack(ItemStack.EMPTY);
                         MinecraftClient.getInstance().player.containerPlayer.sendContentUpdates();
                     } else {
+
                     }
                 }
 
@@ -198,18 +199,6 @@ public class GuiTerminal extends ContainerGuiBase {
             this.updateItems();
             view.sort();
         }
-    }
-
-    public boolean isOverSlotWithStack() {
-        return tile.getControllerEntity() != null && isMouseOverSlot() && slotNumber < view.stacks.size();
-    }
-
-    public boolean isMouseOverSlot() {
-        return getSlotNumber() > 0;
-    }
-
-    public int getSlotNumber() {
-        return slotNumber;
     }
 
     public void updateScrollbar() {

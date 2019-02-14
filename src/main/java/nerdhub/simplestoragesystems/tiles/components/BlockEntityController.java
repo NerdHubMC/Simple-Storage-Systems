@@ -104,16 +104,14 @@ public class BlockEntityController extends BlockEntityEnergyBase implements IEne
     }
 
     public boolean storeStack(ItemStack stack, boolean simulate) {
-        if(storageBayPositions.size() > 0) {
-            for (BlockPos entity : storageBayPositions) {
-                BlockEntityStorageBay storageBay = (BlockEntityStorageBay) world.getBlockEntity(entity);
-                boolean stored = storageBay.storeStack(stack, simulate);
-                if(!stored) {
-                    continue;
-                }
-
-                return stored;
+        for (BlockPos entity : storageBayPositions) {
+            BlockEntityStorageBay storageBay = (BlockEntityStorageBay) world.getBlockEntity(entity);
+            boolean stored = storageBay.storeStack(stack, simulate);
+            if (!stored) {
+                continue;
             }
+
+            return stored;
         }
 
         return false;
@@ -121,12 +119,11 @@ public class BlockEntityController extends BlockEntityEnergyBase implements IEne
 
     public List<ISimpleItemStack> getStoredStacks() {
         List<ISimpleItemStack> list = new ArrayList<>();
-        if (storageBayPositions.size() > 0) {
-            for (BlockPos entity : storageBayPositions) {
-                BlockEntityStorageBay storageBay = (BlockEntityStorageBay) world.getBlockEntity(entity);
-                for (ItemStack stack : storageBay.getStoredItems()) {
-                    list.add(new SimpleItemStack(stack));
-                }
+
+        for (BlockPos entity : storageBayPositions) {
+            BlockEntityStorageBay storageBay = (BlockEntityStorageBay) world.getBlockEntity(entity);
+            for (ItemStack stack : storageBay.getStoredItems()) {
+                list.add(new SimpleItemStack(stack));
             }
         }
 
