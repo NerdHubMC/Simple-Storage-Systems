@@ -1,4 +1,4 @@
-package nerdhub.simplestoragesystems.client.gui.widget;
+package nerdhub.simplestoragesystems.utils.gui;
 
 import com.google.common.collect.Lists;
 import nerdhub.simplestoragesystems.api.item.ICustomStorageStack;
@@ -17,7 +17,8 @@ public class TerminalDisplayHandler {
         this.stacks = Lists.newArrayList();
     }
 
-    public void sort() {
+    //TODO MAKE IT SO USERS CAN DEFINE CUSTOM SORTING, ADD TO TERMINAL LATER ON
+    public void sortTerminalStackView() {
         if (gui.tile.isLinked()) {
             stacks.sort((left, right) -> right.getName().compareTo(left.getName()));
         }
@@ -25,7 +26,7 @@ public class TerminalDisplayHandler {
         this.gui.updateScrollbar();
     }
 
-    public void setStacks(List<ICustomStorageStack> simpleStacksList) {
+    public void setStacksInView(List<ICustomStorageStack> simpleStacksList) {
         stacks.clear();
 
         loop:
