@@ -97,12 +97,19 @@ public class BlockWirelessPoint extends BlockWithEntityBase {
 
     @Override
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity playerEntity) {
-        super.onBreak(world, pos, state, playerEntity);
+        BlockEntityWirelessPoint point = (BlockEntityWirelessPoint) world.getBlockEntity(pos);
+
+        if(point.isLinked() && point.getControllerEntity().wirelessPointPositions.contains(pos)) {
+            point.getControllerEntity().wirelessPointPositions.remove(pos);
+        }
+
         for (BlockPos entityPos : getAdjacentTiles(world, pos)) {
             if(world.getBlockEntity(entityPos) instanceof INetworkComponent) {
                 ComponentHelper.removeComponentLinks((INetworkComponent) world.getBlockEntity(entityPos));
             }
         }
+
+        super.onBreak(world, pos, state, playerEntity);
     }
 
     @Override
