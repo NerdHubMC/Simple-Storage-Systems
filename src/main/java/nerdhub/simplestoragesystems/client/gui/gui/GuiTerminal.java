@@ -4,8 +4,8 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import io.netty.buffer.Unpooled;
 import nerdhub.simplestoragesystems.SimpleStorageSystems;
 import nerdhub.simplestoragesystems.client.gui.container.ContainerTerminal;
-import nerdhub.simplestoragesystems.client.gui.widget.Scrollbar;
-import nerdhub.simplestoragesystems.client.gui.widget.TerminalDisplayHandler;
+import nerdhub.simplestoragesystems.utils.gui.Scrollbar;
+import nerdhub.simplestoragesystems.utils.gui.TerminalDisplayHandler;
 import nerdhub.simplestoragesystems.network.ModPackets;
 import nerdhub.simplestoragesystems.tiles.components.BlockEntityTerminal;
 import net.minecraft.client.MinecraftClient;
@@ -132,7 +132,7 @@ public class GuiTerminal extends ContainerGuiBase {
     }
 
     public void updateItems() {
-        this.view.setStacks(tile.getControllerEntity().getStoredStacks());
+        this.view.setStacksInView(tile.getControllerEntity().getStoredStacks());
     }
 
     @Override
@@ -197,7 +197,7 @@ public class GuiTerminal extends ContainerGuiBase {
     public void updateItemsView() {
         if (tile.isLinked()) {
             this.updateItems();
-            view.sort();
+            view.sortTerminalStackView();
         }
     }
 

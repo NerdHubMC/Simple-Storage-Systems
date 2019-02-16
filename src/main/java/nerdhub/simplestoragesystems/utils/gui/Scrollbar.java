@@ -1,4 +1,4 @@
-package nerdhub.simplestoragesystems.client.gui.widget;
+package nerdhub.simplestoragesystems.utils.gui;
 
 
 import nerdhub.simplestoragesystems.client.gui.gui.ContainerGuiBase;

@@ -4,11 +4,10 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import nerdhub.simplestoragesystems.SimpleStorageSystems;
 import nerdhub.simplestoragesystems.client.gui.container.ContainerStorageBay;
 import nerdhub.simplestoragesystems.tiles.components.BlockEntityStorageBay;
-import net.minecraft.client.gui.ContainerScreen;
 import net.minecraft.text.TranslatableTextComponent;
 import net.minecraft.util.Identifier;
 
-public class GuiStorageBay extends ContainerScreen {
+public class GuiStorageBay extends ContainerGuiBase {
 
     public Identifier storageBayGui = new Identifier(SimpleStorageSystems.MODID, "textures/gui/storage_bay_gui.png");
     public BlockEntityStorageBay tile;
