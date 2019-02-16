@@ -3,11 +3,13 @@ package nerdhub.simplestoragesystems.client.gui.gui;
 import com.mojang.blaze3d.platform.GlStateManager;
 import io.netty.buffer.Unpooled;
 import nerdhub.simplestoragesystems.SimpleStorageSystems;
+import nerdhub.simplestoragesystems.api.item.ICustomStorageStack;
+import nerdhub.simplestoragesystems.api.util.EnumExtractionType;
 import nerdhub.simplestoragesystems.client.gui.container.ContainerTerminal;
-import nerdhub.simplestoragesystems.utils.gui.Scrollbar;
-import nerdhub.simplestoragesystems.utils.gui.TerminalDisplayHandler;
 import nerdhub.simplestoragesystems.network.ModPackets;
 import nerdhub.simplestoragesystems.tiles.components.BlockEntityTerminal;
+import nerdhub.simplestoragesystems.utils.gui.Scrollbar;
+import nerdhub.simplestoragesystems.utils.gui.TerminalDisplayHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.container.Slot;
@@ -24,7 +26,7 @@ public class GuiTerminal extends ContainerGuiBase {
     public BlockEntityTerminal tile;
 
     public TextFieldWidget searchBar;
-    private int slotNumber;
+    private int slotNumber = -1;
     private Scrollbar scrollbar;
     public TerminalDisplayHandler view;
 
@@ -143,8 +145,11 @@ public class GuiTerminal extends ContainerGuiBase {
             int x = 8;
             int y = 26;
 
+            int slot = scrollbar != null ? (scrollbar.getOffset() * 9) : 0;
+
             for (int i = 0; i < 9 * 4; ++i) {
                 if (inBounds(left + x, top + y, 16, 16, (int) mouseX, (int) mouseY)) {
+                    this.slotNumber = slot;
                     if (!stack.isEmpty() && tile.getControllerEntity().storeStack(stack, true)) {
                         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
                         buf.writeBlockPos(tile.controllerPos);
@@ -152,22 +157,36 @@ public class GuiTerminal extends ContainerGuiBase {
                         MinecraftClient.getInstance().getNetworkHandler().getClientConnection().sendPacket(new CustomPayloadServerPacket(ModPackets.PACKET_STORE_STACK, buf));
                         MinecraftClient.getInstance().player.inventory.setCursorStack(ItemStack.EMPTY);
                         MinecraftClient.getInstance().player.containerPlayer.sendContentUpdates();
-                    } else if(stack.isEmpty() && !view.stacks.get(slotNumber).getStack().isEmpty()) {
+                    } else if (stack.isEmpty() && slot > -1 && slot < view.stacks.size() && !view.stacks.get(slot).getStack().isEmpty()) {
+                        EnumExtractionType type = EnumExtractionType.NORMAL_EXTRACTION;
+                        ICustomStorageStack slotStack = view.stacks.get(slot);
 
-                        if(clickedButton == 1) {
+                        if (clickedButton == 1) {
                             //Extract half
+                            type = EnumExtractionType.HALF_EXTRACTION;
                         }
 
-                        if(clickedButton == 2) {
+                        if (clickedButton == 2) {
                             //Extract only one
+                            type = EnumExtractionType.SINGULAR_EXTRACTION;
                         }
 
-                        if(isShiftPressed()) {
+                        if (isShiftPressed()) {
                             //Extract shift
+                            type = EnumExtractionType.SHIFT_EXTRACTION;
                         }
+
+                        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+                        buf.writeBlockPos(tile.getControllerEntity().getPos());
+                        buf.writeItemStack(slotStack.getStack());
+                        buf.writeInt(slotStack.getAmount());
+                        buf.writeInt(type.ordinal());
+                        MinecraftClient.getInstance().getNetworkHandler().getClientConnection().sendPacket(new CustomPayloadServerPacket(ModPackets.PACKET_EXTRACT_STACK, buf));
+                        MinecraftClient.getInstance().player.containerPlayer.sendContentUpdates();
                     }
                 }
 
+                slot++;
                 x += 18;
 
                 if ((i + 1) % 9 == 0) {

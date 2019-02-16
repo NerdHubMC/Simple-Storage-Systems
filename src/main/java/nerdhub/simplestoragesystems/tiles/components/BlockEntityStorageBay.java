@@ -1,9 +1,9 @@
 package nerdhub.simplestoragesystems.tiles.components;
 
+import nerdhub.simplestoragesystems.api.item.CustomStorageStack;
+import nerdhub.simplestoragesystems.api.item.ICustomStorageStack;
 import nerdhub.simplestoragesystems.api.network.EnumComponentTypes;
 import nerdhub.simplestoragesystems.api.network.INetworkComponent;
-import nerdhub.simplestoragesystems.api.item.ICustomStorageStack;
-import nerdhub.simplestoragesystems.api.item.SimpleStorageStack;
 import nerdhub.simplestoragesystems.items.ItemStorageCell;
 import nerdhub.simplestoragesystems.registry.ModBlockEntities;
 import nerdhub.simplestoragesystems.tiles.BlockEntityBase;
@@ -22,6 +22,7 @@ import net.minecraft.util.math.Direction;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class BlockEntityStorageBay extends BlockEntityBase implements SidedInventory, INetworkComponent {
@@ -76,14 +77,54 @@ public class BlockEntityStorageBay extends BlockEntityBase implements SidedInven
                 ListTag dataList = cellStack.getTag().getList("data", NbtType.COMPOUND);
 
                 for (Tag tag : dataList) {
-                    this.cachedStorageList.add(new SimpleStorageStack(ItemStack.fromTag((CompoundTag) tag)));
+                    this.cachedStorageList.add(new CustomStorageStack(ItemStack.fromTag((CompoundTag) tag)));
                 }
             }
         }
     }
 
     public void cacheItem(ItemStack stack) {
-        this.cachedStorageList.add(new SimpleStorageStack(stack));
+        this.cachedStorageList.add(new CustomStorageStack(stack));
+    }
+
+    public int extractItem(ItemStack stack, int amount) {
+        int extracted = 0;
+
+        for (int i : getInvAvailableSlots(null)) {
+            ItemStack cellStack = inventory.get(i);
+            if (cellStack.isEmpty() || !(cellStack.getItem() instanceof ItemStorageCell) || cellStack.getTag() == null) {
+                return extracted;
+            }
+
+            CompoundTag compoundTag = cellStack.getTag();
+            ListTag dataList = compoundTag.getList("data", NbtType.COMPOUND);
+
+            for (Iterator<Tag> it = dataList.iterator(); it.hasNext(); ) {
+                Tag tag = it.next();
+                ItemStack storedStack = ItemStack.fromTag((CompoundTag) tag);
+                if (storedStack.getItem() == stack.getItem()) {
+                    it.remove();
+                    if (storedStack.getAmount() >= amount) {
+                        extracted = amount;
+                        if (storedStack.getAmount() > amount) {
+                            dataList.add(new ItemStack(storedStack.getItem(), storedStack.getAmount() - amount).toTag(new CompoundTag()));
+                        }
+                    } else {
+                        extracted = storedStack.getAmount();
+                    }
+                }
+
+                if (extracted >= amount) {
+                    compoundTag.put("data", dataList);
+                    cellStack.setTag(compoundTag);
+                    inventory.set(i, cellStack);
+                    this.cacheStoredItems();
+                    return extracted;
+                }
+            }
+        }
+
+        return extracted;
     }
 
     public int getStoredItemsCount() {

@@ -11,7 +11,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
-public class SimpleStorageStack implements ICustomStorageStack {
+public class CustomStorageStack implements ICustomStorageStack {
 
     private DecimalFormat formatterWithUnits = new DecimalFormat("####0.#", DecimalFormatSymbols.getInstance(Locale.US));
     private DecimalFormat formatter = new DecimalFormat("#,###", DecimalFormatSymbols.getInstance(Locale.US));
@@ -22,7 +22,7 @@ public class SimpleStorageStack implements ICustomStorageStack {
     private String modName;
     private int amount;
 
-    public SimpleStorageStack(ItemStack stack) {
+    public CustomStorageStack(ItemStack stack) {
         formatterWithUnits.setRoundingMode(RoundingMode.DOWN);
         this.stack = stack;
         this.amount = stack.getAmount();

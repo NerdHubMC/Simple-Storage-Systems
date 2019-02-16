@@ -107,8 +107,8 @@ public class BlockEntityController extends BlockEntityEnergyBase implements IEne
     }
 
     public boolean storeStack(ItemStack stack, boolean simulate) {
-        for (BlockPos entity : storageBayPositions) {
-            BlockEntityStorageBay storageBay = (BlockEntityStorageBay) world.getBlockEntity(entity);
+        for (BlockPos entityPos : storageBayPositions) {
+            BlockEntityStorageBay storageBay = (BlockEntityStorageBay) world.getBlockEntity(entityPos);
             boolean stored = storageBay.storeStack(stack, simulate);
             if (!stored) {
                 continue;
@@ -120,11 +120,23 @@ public class BlockEntityController extends BlockEntityEnergyBase implements IEne
         return false;
     }
 
+    public void extractFromSystem(ItemStack stack, int amount) {
+        int extractionAmount = amount;
+
+        for (BlockPos entityPos : storageBayPositions) {
+            BlockEntityStorageBay storageBay = (BlockEntityStorageBay) world.getBlockEntity(entityPos);
+            extractionAmount = amount - storageBay.extractItem(stack, extractionAmount);
+            if(extractionAmount <= 0) {
+                break;
+            }
+        }
+    }
+
     public List<ICustomStorageStack> getStoredStacks() {
         List<ICustomStorageStack> list = new ArrayList<>();
 
-        for (BlockPos entity : storageBayPositions) {
-            BlockEntityStorageBay storageBay = (BlockEntityStorageBay) world.getBlockEntity(entity);
+        for (BlockPos entityPos : storageBayPositions) {
+            BlockEntityStorageBay storageBay = (BlockEntityStorageBay) world.getBlockEntity(entityPos);
             list.addAll(storageBay.getCachedStorageList());
         }
 
@@ -132,8 +144,8 @@ public class BlockEntityController extends BlockEntityEnergyBase implements IEne
     }
 
     public void cacheStorageBayLists() {
-        for (BlockPos entity : storageBayPositions) {
-            BlockEntityStorageBay storageBay = (BlockEntityStorageBay) world.getBlockEntity(entity);
+        for (BlockPos entityPos : storageBayPositions) {
+            BlockEntityStorageBay storageBay = (BlockEntityStorageBay) world.getBlockEntity(entityPos);
             storageBay.cacheStoredItems();
         }
     }
@@ -146,6 +158,9 @@ public class BlockEntityController extends BlockEntityEnergyBase implements IEne
                 this.updateEntity();
                 break;
             case CRAFTING_TERMINAL:
+                //TODO ADD THIS
+                this.updateEntity();
+                break;
             case STORAGE_BAY:
                 this.storageBayPositions.add(entityPos);
                 this.updateEntity();
