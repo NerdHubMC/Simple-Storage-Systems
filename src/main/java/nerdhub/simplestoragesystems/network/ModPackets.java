@@ -3,12 +3,11 @@ package nerdhub.simplestoragesystems.network;
 import io.netty.buffer.Unpooled;
 import nerdhub.simplestoragesystems.SimpleStorageSystems;
 import nerdhub.simplestoragesystems.api.util.EnumExtractionType;
-import nerdhub.simplestoragesystems.api.util.EnumUsageType;
 import nerdhub.simplestoragesystems.tiles.components.BlockEntityController;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.network.packet.CustomPayloadClientPacket;
+import net.minecraft.client.network.packet.CustomPayloadS2CPacket;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
@@ -66,7 +65,7 @@ public class ModPackets {
                         }
 
                         ((BlockEntityController) blockEntity).extractFromSystem(stack, extractionAmount);
-                        ((ServerPlayerEntity) context.getPlayer()).networkHandler.sendPacket(new CustomPayloadClientPacket(PACKET_UPDATE_CURSOR, new PacketByteBuf(Unpooled.buffer()).writeItemStack(new ItemStack(stack.getItem(), extractionAmount))));
+                        ((ServerPlayerEntity) context.getPlayer()).networkHandler.sendPacket(new CustomPayloadS2CPacket(PACKET_UPDATE_CURSOR, new PacketByteBuf(Unpooled.buffer()).writeItemStack(new ItemStack(stack.getItem(), extractionAmount))));
                         context.getPlayer().inventory.setCursorStack(new ItemStack(stack.getItem(), extractionAmount));
                     }
                 });

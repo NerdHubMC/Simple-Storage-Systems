@@ -1,9 +1,9 @@
 package nerdhub.simplestoragesystems.tiles.components;
 
+import abused_master.abusedlib.tiles.BlockEntityBase;
 import nerdhub.simplestoragesystems.api.network.EnumComponentTypes;
 import nerdhub.simplestoragesystems.api.network.INetworkComponent;
 import nerdhub.simplestoragesystems.registry.ModBlockEntities;
-import nerdhub.simplestoragesystems.tiles.BlockEntityBase;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.TagHelper;
 import net.minecraft.util.math.BlockPos;

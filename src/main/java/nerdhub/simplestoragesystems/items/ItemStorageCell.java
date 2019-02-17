@@ -1,5 +1,6 @@
 package nerdhub.simplestoragesystems.items;
 
+import abused_master.abusedlib.items.ItemBase;
 import nerdhub.simplestoragesystems.SimpleStorageSystems;
 import net.minecraft.client.item.TooltipOptions;
 import net.minecraft.item.ItemStack;

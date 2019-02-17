@@ -1,5 +1,6 @@
 package nerdhub.simplestoragesystems.items;
 
+import abused_master.abusedlib.items.ItemBase;
 import nerdhub.simplestoragesystems.SimpleStorageSystems;
 
 public enum EnumCircuits {

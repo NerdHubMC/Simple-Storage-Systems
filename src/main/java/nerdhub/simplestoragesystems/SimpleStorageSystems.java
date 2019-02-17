@@ -1,14 +1,17 @@
 package nerdhub.simplestoragesystems;
 
+import abused_master.abusedlib.blocks.multipart.impl.MultipartHostRenderer;
+import abused_master.abusedlib.tiles.BlockEntityMultipart;
+import abused_master.abusedlib.utils.Config;
 import nerdhub.simplestoragesystems.network.ModPackets;
 import nerdhub.simplestoragesystems.registry.ModBlockEntities;
 import nerdhub.simplestoragesystems.registry.ModBlocks;
 import nerdhub.simplestoragesystems.registry.ModItems;
 import nerdhub.simplestoragesystems.registry.ModRecipes;
-import nerdhub.simplestoragesystems.utils.Config;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.fabricmc.fabric.api.client.render.BlockEntityRendererRegistry;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
@@ -36,5 +39,7 @@ public class SimpleStorageSystems implements ModInitializer, ClientModInitialize
     public void onInitializeClient() {
         ModBlockEntities.registerClientGUIs();
         ModPackets.registerClientPackets();
+
+        BlockEntityRendererRegistry.INSTANCE.register(BlockEntityMultipart.class, new MultipartHostRenderer());
     }
 }

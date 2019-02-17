@@ -1,14 +1,14 @@
 package nerdhub.simplestoragesystems.tiles.components;
 
-import abused_master.energy.EnergyStorage;
-import abused_master.energy.IEnergyReceiver;
+import abused_master.abusedlib.energy.EnergyStorage;
+import abused_master.abusedlib.energy.IEnergyReceiver;
+import abused_master.abusedlib.tiles.BlockEntityEnergyBase;
 import nerdhub.simplestoragesystems.SimpleStorageSystems;
 import nerdhub.simplestoragesystems.api.item.ICustomStorageStack;
 import nerdhub.simplestoragesystems.api.network.EnumComponentTypes;
 import nerdhub.simplestoragesystems.api.network.ILinkerComponent;
 import nerdhub.simplestoragesystems.api.network.INetworkComponent;
 import nerdhub.simplestoragesystems.registry.ModBlockEntities;
-import nerdhub.simplestoragesystems.tiles.BlockEntityEnergyBase;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;

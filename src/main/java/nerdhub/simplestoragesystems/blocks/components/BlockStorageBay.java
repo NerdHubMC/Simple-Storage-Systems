@@ -1,7 +1,7 @@
 package nerdhub.simplestoragesystems.blocks.components;
 
+import abused_master.abusedlib.blocks.BlockWithEntityBase;
 import nerdhub.simplestoragesystems.SimpleStorageSystems;
-import nerdhub.simplestoragesystems.blocks.BlockWithEntityBase;
 import nerdhub.simplestoragesystems.registry.ModBlockEntities;
 import nerdhub.simplestoragesystems.tiles.components.BlockEntityStorageBay;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;

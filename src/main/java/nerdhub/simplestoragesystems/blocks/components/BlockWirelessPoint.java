@@ -1,8 +1,8 @@
 package nerdhub.simplestoragesystems.blocks.components;
 
+import abused_master.abusedlib.blocks.BlockWithEntityBase;
 import nerdhub.simplestoragesystems.SimpleStorageSystems;
 import nerdhub.simplestoragesystems.api.network.INetworkComponent;
-import nerdhub.simplestoragesystems.blocks.BlockWithEntityBase;
 import nerdhub.simplestoragesystems.tiles.components.BlockEntityWirelessPoint;
 import nerdhub.simplestoragesystems.utils.ComponentHelper;
 import net.minecraft.block.*;

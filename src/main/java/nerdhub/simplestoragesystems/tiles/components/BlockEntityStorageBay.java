@@ -1,12 +1,12 @@
 package nerdhub.simplestoragesystems.tiles.components;
 
+import abused_master.abusedlib.tiles.BlockEntityBase;
 import nerdhub.simplestoragesystems.api.item.CustomStorageStack;
 import nerdhub.simplestoragesystems.api.item.ICustomStorageStack;
 import nerdhub.simplestoragesystems.api.network.EnumComponentTypes;
 import nerdhub.simplestoragesystems.api.network.INetworkComponent;
 import nerdhub.simplestoragesystems.items.ItemStorageCell;
 import nerdhub.simplestoragesystems.registry.ModBlockEntities;
-import nerdhub.simplestoragesystems.tiles.BlockEntityBase;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.SidedInventory;
@@ -252,8 +252,8 @@ public class BlockEntityStorageBay extends BlockEntityBase implements SidedInven
     }
 
     @Override
-    public void clearInv() {
-        inventory.clear();
+    public void clear() {
+        this.inventory.clear();
     }
 
     @Override

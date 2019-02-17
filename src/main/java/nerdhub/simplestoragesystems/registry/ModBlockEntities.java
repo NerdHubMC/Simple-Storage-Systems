@@ -1,5 +1,6 @@
 package nerdhub.simplestoragesystems.registry;
 
+import abused_master.abusedlib.registry.RegistryHelper;
 import nerdhub.simplestoragesystems.SimpleStorageSystems;
 import nerdhub.simplestoragesystems.client.gui.container.ContainerStorageBay;
 import nerdhub.simplestoragesystems.client.gui.container.ContainerTerminal;
@@ -9,7 +10,6 @@ import nerdhub.simplestoragesystems.tiles.components.BlockEntityController;
 import nerdhub.simplestoragesystems.tiles.components.BlockEntityStorageBay;
 import nerdhub.simplestoragesystems.tiles.components.BlockEntityTerminal;
 import nerdhub.simplestoragesystems.tiles.components.BlockEntityWirelessPoint;
-import nerdhub.simplestoragesystems.utils.RegistryHelper;
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.block.entity.BlockEntityType;

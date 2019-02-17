@@ -1,5 +1,6 @@
 package nerdhub.simplestoragesystems.items;
 
+import abused_master.abusedlib.items.ItemBase;
 import nerdhub.simplestoragesystems.SimpleStorageSystems;
 import nerdhub.simplestoragesystems.api.network.ILinkerComponent;
 import net.minecraft.block.entity.BlockEntity;

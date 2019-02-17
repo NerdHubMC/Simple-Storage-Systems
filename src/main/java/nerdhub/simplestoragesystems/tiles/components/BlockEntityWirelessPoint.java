@@ -1,11 +1,11 @@
 package nerdhub.simplestoragesystems.tiles.components;
 
+import abused_master.abusedlib.tiles.BlockEntityBase;
 import nerdhub.simplestoragesystems.api.network.EnumComponentTypes;
 import nerdhub.simplestoragesystems.api.network.ILinkerComponent;
 import nerdhub.simplestoragesystems.api.network.INetworkComponent;
 import nerdhub.simplestoragesystems.blocks.components.BlockWirelessPoint;
 import nerdhub.simplestoragesystems.registry.ModBlockEntities;
-import nerdhub.simplestoragesystems.tiles.BlockEntityBase;
 import nerdhub.simplestoragesystems.utils.ComponentHelper;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.entity.player.PlayerEntity;

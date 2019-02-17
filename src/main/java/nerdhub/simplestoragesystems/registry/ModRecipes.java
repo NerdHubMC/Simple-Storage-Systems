@@ -1,6 +1,6 @@
 package nerdhub.simplestoragesystems.registry;
 
-import nerdhub.simplestoragesystems.utils.RecipeGenerator;
+import abused_master.abusedlib.registry.RecipeGenerator;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;

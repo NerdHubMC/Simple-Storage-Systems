@@ -1,10 +1,11 @@
 package nerdhub.simplestoragesystems.registry;
 
+import abused_master.abusedlib.registry.RegistryHelper;
+import nerdhub.simplestoragesystems.SimpleStorageSystems;
 import nerdhub.simplestoragesystems.blocks.components.BlockController;
 import nerdhub.simplestoragesystems.blocks.components.BlockStorageBay;
 import nerdhub.simplestoragesystems.blocks.components.BlockTerminal;
 import nerdhub.simplestoragesystems.blocks.components.BlockWirelessPoint;
-import nerdhub.simplestoragesystems.utils.RegistryHelper;
 
 public class ModBlocks {
 
@@ -14,9 +15,9 @@ public class ModBlocks {
     public static BlockWirelessPoint WIRELESS_POINT = new BlockWirelessPoint();
 
     public static void registerBlocks() {
-        RegistryHelper.registerBlock(CONTROLLER);
-        RegistryHelper.registerBlock(STORAGE_BAY);
-        RegistryHelper.registerBlock(TERMINAL);
-        RegistryHelper.registerBlock(WIRELESS_POINT);
+        RegistryHelper.registerBlock(SimpleStorageSystems.MODID, CONTROLLER);
+        RegistryHelper.registerBlock(SimpleStorageSystems.MODID, STORAGE_BAY);
+        RegistryHelper.registerBlock(SimpleStorageSystems.MODID, TERMINAL);
+        RegistryHelper.registerBlock(SimpleStorageSystems.MODID, WIRELESS_POINT);
     }
 }
