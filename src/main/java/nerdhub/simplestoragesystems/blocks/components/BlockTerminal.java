@@ -1,6 +1,7 @@
 package nerdhub.simplestoragesystems.blocks.components;
 
 import nerdhub.simplestoragesystems.SimpleStorageSystems;
+import nerdhub.simplestoragesystems.api.util.EnumUsageType;
 import nerdhub.simplestoragesystems.blocks.BlockWithEntityBase;
 import nerdhub.simplestoragesystems.registry.ModBlockEntities;
 import nerdhub.simplestoragesystems.tiles.components.BlockEntityTerminal;
@@ -44,9 +45,11 @@ public class BlockTerminal extends BlockWithEntityBase {
             BlockEntityTerminal terminal = (BlockEntityTerminal) world.getBlockEntity(blockPos);
             if(terminal.isLinked()) {
                 terminal.getControllerEntity().cacheStorageBayLists();
-            }
 
-            ContainerProviderRegistry.INSTANCE.openContainer(ModBlockEntities.TERMINAL_CONTAINER, player, buf -> buf.writeBlockPos(blockPos));
+                if (terminal.getControllerEntity().storage.getEnergyStored() >= EnumUsageType.OPEN.getUsageAmount()) {
+                    ContainerProviderRegistry.INSTANCE.openContainer(ModBlockEntities.TERMINAL_CONTAINER, player, buf -> buf.writeBlockPos(blockPos));
+                }
+            }
         }
 
         return true;

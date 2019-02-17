@@ -1,1 +1,11 @@
 #Simple Storage Systems mod config
+
+#Energy Usage Configs, these must be whole numbers
+#While the system is idle and connected to other components, multiplied by the amount of components connected
+controller-idle: 1
+#Once the system is opened via a terminal, usage per tick
+system-opened: 20
+#Once an item is inserted into the system, amount to use per 1 item
+item-insertion: 10
+#Once an item is extracted from the system, amount to use per 1 item
+item-extraction: 10

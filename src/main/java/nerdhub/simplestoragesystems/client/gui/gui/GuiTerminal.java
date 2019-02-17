@@ -5,6 +5,7 @@ import io.netty.buffer.Unpooled;
 import nerdhub.simplestoragesystems.SimpleStorageSystems;
 import nerdhub.simplestoragesystems.api.item.ICustomStorageStack;
 import nerdhub.simplestoragesystems.api.util.EnumExtractionType;
+import nerdhub.simplestoragesystems.api.util.EnumUsageType;
 import nerdhub.simplestoragesystems.client.gui.container.ContainerTerminal;
 import nerdhub.simplestoragesystems.network.ModPackets;
 import nerdhub.simplestoragesystems.tiles.components.BlockEntityTerminal;
@@ -26,7 +27,6 @@ public class GuiTerminal extends ContainerGuiBase {
     public BlockEntityTerminal tile;
 
     public TextFieldWidget searchBar;
-    private int slotNumber = -1;
     private Scrollbar scrollbar;
     public TerminalDisplayHandler view;
 
@@ -70,14 +70,9 @@ public class GuiTerminal extends ContainerGuiBase {
         this.fontRenderer.draw(this.name.getFormattedText(), 8, 10, 4210752);
         int x = 8;
         int y = 26;
-        this.slotNumber = -1;
         int slot = scrollbar != null ? (scrollbar.getOffset() * 9) : 0;
 
         for (int i = 0; i < 9 * 4; ++i) {
-            if (inBounds(x, y, 16, 16, mouseX, mouseY)) {
-                this.slotNumber = slot;
-            }
-
             if (slot < view.stacks.size()) {
                 view.stacks.get(slot).draw(this, x, y);
             }
@@ -128,6 +123,7 @@ public class GuiTerminal extends ContainerGuiBase {
     @Override
     public void update() {
         super.update();
+        this.useEnergy(EnumUsageType.OPEN.getUsageAmount());
         if (searchBar != null) {
             searchBar.tick();
         }
@@ -149,40 +145,51 @@ public class GuiTerminal extends ContainerGuiBase {
 
             for (int i = 0; i < 9 * 4; ++i) {
                 if (inBounds(left + x, top + y, 16, 16, (int) mouseX, (int) mouseY)) {
-                    this.slotNumber = slot;
                     if (!stack.isEmpty() && tile.getControllerEntity().storeStack(stack, true)) {
-                        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-                        buf.writeBlockPos(tile.controllerPos);
-                        buf.writeItemStack(stack);
-                        MinecraftClient.getInstance().getNetworkHandler().getClientConnection().sendPacket(new CustomPayloadServerPacket(ModPackets.PACKET_STORE_STACK, buf));
-                        MinecraftClient.getInstance().player.inventory.setCursorStack(ItemStack.EMPTY);
-                        MinecraftClient.getInstance().player.containerPlayer.sendContentUpdates();
+                        if(useEnergy(EnumUsageType.INSERTION.getUsageAmount() * stack.getAmount())) {
+                            PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+                            buf.writeBlockPos(tile.controllerPos);
+                            buf.writeItemStack(stack);
+                            MinecraftClient.getInstance().getNetworkHandler().getClientConnection().sendPacket(new CustomPayloadServerPacket(ModPackets.PACKET_STORE_STACK, buf));
+                            MinecraftClient.getInstance().player.inventory.setCursorStack(ItemStack.EMPTY);
+                            MinecraftClient.getInstance().player.containerPlayer.sendContentUpdates();
+                        }
                     } else if (stack.isEmpty() && slot > -1 && slot < view.stacks.size() && !view.stacks.get(slot).getStack().isEmpty()) {
                         EnumExtractionType type = EnumExtractionType.NORMAL_EXTRACTION;
                         ICustomStorageStack slotStack = view.stacks.get(slot);
+                        int energyUsageAmount = 0;
 
                         if (clickedButton == 1) {
                             //Extract half
                             type = EnumExtractionType.HALF_EXTRACTION;
+                            energyUsageAmount = slotStack.getAmount() > 64 ? 32 * EnumUsageType.EXTRACTION.getUsageAmount() : slotStack.getAmount() * EnumUsageType.EXTRACTION.getUsageAmount();
                         }
 
                         if (clickedButton == 2) {
                             //Extract only one
                             type = EnumExtractionType.SINGULAR_EXTRACTION;
+                            energyUsageAmount = EnumUsageType.EXTRACTION.getUsageAmount();
                         }
 
                         if (isShiftPressed()) {
                             //Extract shift
                             type = EnumExtractionType.SHIFT_EXTRACTION;
+                            energyUsageAmount = slotStack.getAmount() > 64 ? 64 * EnumUsageType.EXTRACTION.getUsageAmount() : slotStack.getAmount() * EnumUsageType.EXTRACTION.getUsageAmount();
                         }
 
-                        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-                        buf.writeBlockPos(tile.getControllerEntity().getPos());
-                        buf.writeItemStack(slotStack.getStack());
-                        buf.writeInt(slotStack.getAmount());
-                        buf.writeInt(type.ordinal());
-                        MinecraftClient.getInstance().getNetworkHandler().getClientConnection().sendPacket(new CustomPayloadServerPacket(ModPackets.PACKET_EXTRACT_STACK, buf));
-                        MinecraftClient.getInstance().player.containerPlayer.sendContentUpdates();
+                        if(type == EnumExtractionType.NORMAL_EXTRACTION) {
+                            energyUsageAmount = slotStack.getAmount() > 64 ? 64 * EnumUsageType.EXTRACTION.getUsageAmount() : slotStack.getAmount() * EnumUsageType.EXTRACTION.getUsageAmount();
+                        }
+
+                        if(useEnergy(energyUsageAmount)) {
+                            PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+                            buf.writeBlockPos(tile.getControllerEntity().getPos());
+                            buf.writeItemStack(slotStack.getStack());
+                            buf.writeInt(slotStack.getAmount());
+                            buf.writeInt(type.ordinal());
+                            MinecraftClient.getInstance().getNetworkHandler().getClientConnection().sendPacket(new CustomPayloadServerPacket(ModPackets.PACKET_EXTRACT_STACK, buf));
+                            MinecraftClient.getInstance().player.containerPlayer.sendContentUpdates();
+                        }
                     }
                 }
 
@@ -198,6 +205,23 @@ public class GuiTerminal extends ContainerGuiBase {
 
         this.updateItemsView();
         return true;
+    }
+
+    public boolean useEnergy(int amount) {
+        if(tile.isLinked()) {
+            if (tile.getControllerEntity().storage.getEnergyStored() >= EnumUsageType.OPEN.getUsageAmount()) {
+                PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+                buf.writeBlockPos(tile.getControllerEntity().getPos());
+                buf.writeInt(amount);
+                MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadServerPacket(ModPackets.PACKET_USE_ENERGY, buf));
+                return true;
+            } else {
+                this.close();
+                return false;
+            }
+        }
+
+        return false;
     }
 
     @Override

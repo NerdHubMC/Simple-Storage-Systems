@@ -2,6 +2,7 @@ package nerdhub.simplestoragesystems.tiles.components;
 
 import abused_master.energy.EnergyStorage;
 import abused_master.energy.IEnergyReceiver;
+import nerdhub.simplestoragesystems.SimpleStorageSystems;
 import nerdhub.simplestoragesystems.api.item.ICustomStorageStack;
 import nerdhub.simplestoragesystems.api.network.EnumComponentTypes;
 import nerdhub.simplestoragesystems.api.network.ILinkerComponent;
@@ -100,7 +101,7 @@ public class BlockEntityController extends BlockEntityEnergyBase implements IEne
 
     @Override
     public void tick() {
-        int energyUsage = (terminalPositions.size() + storageBayPositions.size()) * 5;
+        int energyUsage = (terminalPositions.size() + storageBayPositions.size()) * SimpleStorageSystems.config.getInt("controller-idle");
         if(energyUsage > 0 && storage.getEnergyStored() >= energyUsage) {
             storage.extractEnergy(energyUsage);
         }

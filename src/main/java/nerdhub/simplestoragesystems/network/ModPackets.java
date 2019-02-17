@@ -3,6 +3,7 @@ package nerdhub.simplestoragesystems.network;
 import io.netty.buffer.Unpooled;
 import nerdhub.simplestoragesystems.SimpleStorageSystems;
 import nerdhub.simplestoragesystems.api.util.EnumExtractionType;
+import nerdhub.simplestoragesystems.api.util.EnumUsageType;
 import nerdhub.simplestoragesystems.tiles.components.BlockEntityController;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
@@ -19,6 +20,7 @@ public class ModPackets {
     public static final Identifier PACKET_STORE_STACK = new Identifier(SimpleStorageSystems.MODID, "packet_store_stack");
     public static final Identifier PACKET_EXTRACT_STACK = new Identifier(SimpleStorageSystems.MODID, "packet_extract_stack");
     public static final Identifier PACKET_UPDATE_CURSOR = new Identifier(SimpleStorageSystems.MODID, "packet_update_cursor");
+    public static final Identifier PACKET_USE_ENERGY = new Identifier(SimpleStorageSystems.MODID, "packet_use_energy");
 
     public static void registerPackets() {
         ServerSidePacketRegistry.INSTANCE.register(PACKET_STORE_STACK, ((context, packetByteBuf) -> {
@@ -66,6 +68,23 @@ public class ModPackets {
                         ((BlockEntityController) blockEntity).extractFromSystem(stack, extractionAmount);
                         ((ServerPlayerEntity) context.getPlayer()).networkHandler.sendPacket(new CustomPayloadClientPacket(PACKET_UPDATE_CURSOR, new PacketByteBuf(Unpooled.buffer()).writeItemStack(new ItemStack(stack.getItem(), extractionAmount))));
                         context.getPlayer().inventory.setCursorStack(new ItemStack(stack.getItem(), extractionAmount));
+                    }
+                });
+            }
+        }));
+
+        //Used for extracting energy from the client, anything else extracted on server will not be handled here
+        ServerSidePacketRegistry.INSTANCE.register(PACKET_USE_ENERGY, ((context, packetByteBuf) -> {
+            BlockPos pos = packetByteBuf.readBlockPos();
+            int usageAmount = packetByteBuf.readInt();
+
+            if(context.getPlayer() != null && context.getPlayer().world != null) {
+                context.getTaskQueue().execute(() -> {
+                    BlockEntity blockEntity = context.getPlayer().world.getBlockEntity(pos);
+
+                    if(blockEntity instanceof BlockEntityController) {
+                        ((BlockEntityController) blockEntity).storage.extractEnergy(usageAmount);
+                        ((BlockEntityController) blockEntity).updateEntity();
                     }
                 });
             }
