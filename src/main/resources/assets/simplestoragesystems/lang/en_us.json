@@ -10,5 +10,10 @@
   "item.simplestoragesystems.storage_cell" : "Storage Cell",
   "item.simplestoragesystems.storage_cell_4" : "Storage Cell x4",
   "item.simplestoragesystems.storage_cell_16" : "Storage Cell x16",
-  "item.simplestoragesystems.storage_cell_64" : "Storage Cell x64"
+  "item.simplestoragesystems.storage_cell_64" : "Storage Cell x64",
+  "item.simplestoragesystems.linker" : "System Linker Tool",
+  "item.simplestoragesystems.circuit_frame" : "Circuit Frame Base",
+  "item.simplestoragesystems.iron_circuit" : "Iron Circuit",
+  "item.simplestoragesystems.gold_circuit" : "Gold Circuit",
+  "item.simplestoragesystems.diamond_circuit" : "Diamond Circuit"
 }
