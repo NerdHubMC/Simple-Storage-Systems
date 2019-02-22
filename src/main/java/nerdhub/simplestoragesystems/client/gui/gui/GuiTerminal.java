@@ -4,11 +4,11 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import io.netty.buffer.Unpooled;
 import nerdhub.simplestoragesystems.SimpleStorageSystems;
 import nerdhub.simplestoragesystems.api.item.ICustomStorageStack;
+import nerdhub.simplestoragesystems.api.network.INetworkComponent;
 import nerdhub.simplestoragesystems.api.util.EnumExtractionType;
 import nerdhub.simplestoragesystems.api.util.EnumUsageType;
 import nerdhub.simplestoragesystems.client.gui.container.ContainerTerminal;
 import nerdhub.simplestoragesystems.network.ModPackets;
-import nerdhub.simplestoragesystems.tiles.components.BlockEntityTerminal;
 import nerdhub.simplestoragesystems.utils.gui.Scrollbar;
 import nerdhub.simplestoragesystems.utils.gui.TerminalDisplayHandler;
 import net.minecraft.client.MinecraftClient;
@@ -16,7 +16,7 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.container.Slot;
 import net.minecraft.container.SlotActionType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.packet.CustomPayloadServerPacket;
+import net.minecraft.server.network.packet.CustomPayloadC2SPacket;
 import net.minecraft.text.TranslatableTextComponent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
@@ -24,13 +24,13 @@ import net.minecraft.util.PacketByteBuf;
 public class GuiTerminal extends ContainerGuiBase {
 
     public Identifier terminalGui = new Identifier(SimpleStorageSystems.MODID, "textures/gui/terminal_gui.png");
-    public BlockEntityTerminal tile;
+    public INetworkComponent tile;
 
     public TextFieldWidget searchBar;
     private Scrollbar scrollbar;
     public TerminalDisplayHandler view;
 
-    public GuiTerminal(BlockEntityTerminal tile, ContainerTerminal container) {
+    public GuiTerminal(INetworkComponent tile, ContainerTerminal container) {
         super(container, container.playerInventory, new TranslatableTextComponent("gui.simplestoragesystems.terminal"));
         this.containerWidth = 194;
         this.containerHeight = 193;
@@ -58,7 +58,7 @@ public class GuiTerminal extends ContainerGuiBase {
     public void draw(int var1, int var2, float var3) {
         this.drawBackground();
         super.draw(var1, var2, var3);
-        this.drawMousoverTooltip(var1, var2);
+        this.drawMouseoverTooltip(var1, var2);
 
         if (scrollbar != null) {
             scrollbar.update(this, var1 - left, var2 - top);
@@ -148,9 +148,9 @@ public class GuiTerminal extends ContainerGuiBase {
                     if (!stack.isEmpty() && tile.getControllerEntity().storeStack(stack, true)) {
                         if(useEnergy(EnumUsageType.INSERTION.getUsageAmount() * stack.getAmount())) {
                             PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-                            buf.writeBlockPos(tile.controllerPos);
+                            buf.writeBlockPos(tile.getControllerEntity().getPos());
                             buf.writeItemStack(stack);
-                            MinecraftClient.getInstance().getNetworkHandler().getClientConnection().sendPacket(new CustomPayloadServerPacket(ModPackets.PACKET_STORE_STACK, buf));
+                            MinecraftClient.getInstance().getNetworkHandler().getClientConnection().sendPacket(new CustomPayloadC2SPacket(ModPackets.PACKET_STORE_STACK, buf));
                             MinecraftClient.getInstance().player.inventory.setCursorStack(ItemStack.EMPTY);
                             MinecraftClient.getInstance().player.containerPlayer.sendContentUpdates();
                         }
@@ -187,7 +187,7 @@ public class GuiTerminal extends ContainerGuiBase {
                             buf.writeItemStack(slotStack.getStack());
                             buf.writeInt(slotStack.getAmount());
                             buf.writeInt(type.ordinal());
-                            MinecraftClient.getInstance().getNetworkHandler().getClientConnection().sendPacket(new CustomPayloadServerPacket(ModPackets.PACKET_EXTRACT_STACK, buf));
+                            MinecraftClient.getInstance().getNetworkHandler().getClientConnection().sendPacket(new CustomPayloadC2SPacket(ModPackets.PACKET_EXTRACT_STACK, buf));
                             MinecraftClient.getInstance().player.containerPlayer.sendContentUpdates();
                         }
                     }
@@ -213,7 +213,7 @@ public class GuiTerminal extends ContainerGuiBase {
                 PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
                 buf.writeBlockPos(tile.getControllerEntity().getPos());
                 buf.writeInt(amount);
-                MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadServerPacket(ModPackets.PACKET_USE_ENERGY, buf));
+                MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(ModPackets.PACKET_USE_ENERGY, buf));
                 return true;
             } else {
                 this.close();

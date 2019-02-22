@@ -3,7 +3,7 @@ package nerdhub.simplestoragesystems.network;
 import io.netty.buffer.Unpooled;
 import nerdhub.simplestoragesystems.SimpleStorageSystems;
 import nerdhub.simplestoragesystems.api.util.EnumExtractionType;
-import nerdhub.simplestoragesystems.tiles.components.BlockEntityController;
+import nerdhub.simplestoragesystems.tiles.BlockEntityController;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.minecraft.block.entity.BlockEntity;

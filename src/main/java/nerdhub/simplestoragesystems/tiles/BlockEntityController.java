@@ -1,4 +1,4 @@
-package nerdhub.simplestoragesystems.tiles.components;
+package nerdhub.simplestoragesystems.tiles;
 
 import abused_master.abusedlib.energy.EnergyStorage;
 import abused_master.abusedlib.energy.IEnergyReceiver;
@@ -10,7 +10,6 @@ import nerdhub.simplestoragesystems.api.network.ILinkerComponent;
 import nerdhub.simplestoragesystems.api.network.INetworkComponent;
 import nerdhub.simplestoragesystems.registry.ModBlockEntities;
 import net.fabricmc.fabric.api.util.NbtType;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
@@ -101,6 +100,8 @@ public class BlockEntityController extends BlockEntityEnergyBase implements IEne
 
     @Override
     public void tick() {
+        this.receiveEnergy(1000);
+
         int energyUsage = (terminalPositions.size() + storageBayPositions.size()) * SimpleStorageSystems.config.getInt("controller-idle");
         if(energyUsage > 0 && storage.getEnergyStored() >= energyUsage) {
             storage.extractEnergy(energyUsage);
@@ -109,13 +110,15 @@ public class BlockEntityController extends BlockEntityEnergyBase implements IEne
 
     public boolean storeStack(ItemStack stack, boolean simulate) {
         for (BlockPos entityPos : storageBayPositions) {
-            BlockEntityStorageBay storageBay = (BlockEntityStorageBay) world.getBlockEntity(entityPos);
-            boolean stored = storageBay.storeStack(stack, simulate);
-            if (!stored) {
-                continue;
-            }
+            if(world.getBlockEntity(entityPos) instanceof BlockEntityStorageBay) {
+                BlockEntityStorageBay storageBay = (BlockEntityStorageBay) world.getBlockEntity(entityPos);
+                boolean stored = storageBay.storeStack(stack, simulate);
+                if (!stored) {
+                    continue;
+                }
 
-            return stored;
+                return stored;
+            }
         }
 
         return false;
@@ -146,16 +149,19 @@ public class BlockEntityController extends BlockEntityEnergyBase implements IEne
 
     public void cacheStorageBayLists() {
         for (BlockPos entityPos : storageBayPositions) {
-            BlockEntityStorageBay storageBay = (BlockEntityStorageBay) world.getBlockEntity(entityPos);
-            storageBay.cacheStoredItems();
+            if(world.getBlockEntity(entityPos) instanceof BlockEntityStorageBay) {
+                BlockEntityStorageBay storageBay = (BlockEntityStorageBay) world.getBlockEntity(entityPos);
+                storageBay.cacheStoredItems();
+            }
         }
     }
 
-    public void addComponent(BlockEntity entity, BlockPos entityPos) {
-        EnumComponentTypes type = ((INetworkComponent) entity).getComponentType();
+    public void addComponent(INetworkComponent component, BlockPos entityPos) {
+        EnumComponentTypes type = component.getComponentType();
         switch (type) {
             case TERMINAL:
-                this.terminalPositions.add(entityPos);
+                if(!terminalPositions.contains(entityPos))
+                    this.terminalPositions.add(entityPos);
                 this.updateEntity();
                 break;
             case CRAFTING_TERMINAL:
@@ -163,13 +169,45 @@ public class BlockEntityController extends BlockEntityEnergyBase implements IEne
                 this.updateEntity();
                 break;
             case STORAGE_BAY:
-                this.storageBayPositions.add(entityPos);
+                if(!storageBayPositions.contains(entityPos))
+                    this.storageBayPositions.add(entityPos);
                 this.updateEntity();
                 break;
             case AUTO_CRAFTING_INTERFACE:
+                //TODO ADD THIS
                 this.updateEntity();
                 break;
             case AUTO_CRAFTING_PROCESSOR:
+                //TODO ADD THIS
+                this.updateEntity();
+                break;
+            default:
+                this.updateEntity();
+                break;
+        }
+    }
+
+    public void removeComponent(INetworkComponent component, BlockPos entityPos) {
+        EnumComponentTypes type = component.getComponentType();
+        switch (type) {
+            case TERMINAL:
+                this.terminalPositions.remove(entityPos);
+                this.updateEntity();
+                break;
+            case CRAFTING_TERMINAL:
+                //TODO ADD THIS
+                this.updateEntity();
+                break;
+            case STORAGE_BAY:
+                this.storageBayPositions.remove(entityPos);
+                this.updateEntity();
+                break;
+            case AUTO_CRAFTING_INTERFACE:
+                //TODO ADD THIS
+                this.updateEntity();
+                break;
+            case AUTO_CRAFTING_PROCESSOR:
+                //TODO ADD THIS
                 this.updateEntity();
                 break;
             default:

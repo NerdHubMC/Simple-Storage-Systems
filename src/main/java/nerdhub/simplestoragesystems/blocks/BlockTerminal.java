@@ -1,18 +1,23 @@
-package nerdhub.simplestoragesystems.blocks.components;
+package nerdhub.simplestoragesystems.blocks;
 
 import abused_master.abusedlib.blocks.BlockWithEntityBase;
 import nerdhub.simplestoragesystems.SimpleStorageSystems;
 import nerdhub.simplestoragesystems.api.util.EnumUsageType;
 import nerdhub.simplestoragesystems.registry.ModBlockEntities;
-import nerdhub.simplestoragesystems.tiles.components.BlockEntityTerminal;
+import nerdhub.simplestoragesystems.registry.ModBlocks;
+import nerdhub.simplestoragesystems.tiles.BlockEntityTerminal;
+import nerdhub.simplestoragesystems.utils.ComponentHelper;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.VerticalEntityPosition;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.Properties;
 import net.minecraft.state.property.Property;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Mirror;
@@ -28,11 +33,13 @@ import javax.annotation.Nullable;
 
 public class BlockTerminal extends BlockWithEntityBase {
 
-    public static final DirectionProperty FACING = HorizontalFacingBlock.field_11177;
-    public VoxelShape NORTH_SHAPE = Block.createCuboidShape(0.0D, 0.0D, 13.0D, 16.0D, 16.0D, 16.0D);
-    public VoxelShape EAST_SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 3.0D, 16.0D, 16.0D);
-    public VoxelShape SOUTH_SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 3.0D);
-    public VoxelShape WEST_SHAPE = Block.createCuboidShape(13.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
+    public static final DirectionProperty FACING = Properties.FACING;
+    public static VoxelShape NORTH_SHAPE = Block.createCuboidShape(0.0D, 0.0D, 13.0D, 16.0D, 16.0D, 16.0D);
+    public static VoxelShape EAST_SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 3.0D, 16.0D, 16.0D);
+    public static VoxelShape SOUTH_SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 3.0D);
+    public static VoxelShape WEST_SHAPE = Block.createCuboidShape(13.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
+    public static VoxelShape UP_SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 3.0D, 16.0D);
+    public static VoxelShape DOWN_SHAPE = Block.createCuboidShape(0.0D, 13.0D, 0.0D, 16.0D, 16.0D, 16.0D);
 
     public BlockTerminal() {
         super("terminal", Material.STONE, 1.0f, SimpleStorageSystems.modItemGroup);
@@ -56,15 +63,29 @@ public class BlockTerminal extends BlockWithEntityBase {
     }
 
     @Override
+    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity livingEntity, ItemStack stack) {
+        ComponentHelper.linkNeighborTerminals(null, world, pos, ModBlocks.WIRELESS_POINT);
+        super.onPlaced(world, pos, state, livingEntity, stack);
+    }
+
+    @Override
     public VoxelShape getOutlineShape(BlockState blockState_1, BlockView blockView_1, BlockPos blockPos_1, VerticalEntityPosition verticalEntityPosition_1) {
-        switch(blockState_1.get(FACING).getHorizontal()) {
+        return getShapeFromDirection(blockState_1.get(FACING));
+    }
+
+    public static VoxelShape getShapeFromDirection(Direction direction) {
+        switch(direction.getId()) {
+            case 0:
+                return UP_SHAPE;
+            case 1:
+                return DOWN_SHAPE;
             case 2:
                 return SOUTH_SHAPE;
-            case 0:
-                return NORTH_SHAPE;
-            case 1:
-                return EAST_SHAPE;
             case 3:
+                return NORTH_SHAPE;
+            case 4:
+                return EAST_SHAPE;
+            case 5:
             default:
                 return WEST_SHAPE;
         }
@@ -73,7 +94,7 @@ public class BlockTerminal extends BlockWithEntityBase {
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext itemPlacementContext_1) {
-        return this.getDefaultState().with(FACING, itemPlacementContext_1.getPlayerHorizontalFacing().getOpposite());
+        return this.getDefaultState().with(FACING, itemPlacementContext_1.getPlayerFacing().getOpposite());
     }
 
     @Override

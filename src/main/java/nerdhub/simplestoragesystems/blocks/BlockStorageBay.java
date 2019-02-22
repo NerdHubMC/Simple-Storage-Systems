@@ -1,9 +1,9 @@
-package nerdhub.simplestoragesystems.blocks.components;
+package nerdhub.simplestoragesystems.blocks;
 
 import abused_master.abusedlib.blocks.BlockWithEntityBase;
 import nerdhub.simplestoragesystems.SimpleStorageSystems;
 import nerdhub.simplestoragesystems.registry.ModBlockEntities;
-import nerdhub.simplestoragesystems.tiles.components.BlockEntityStorageBay;
+import nerdhub.simplestoragesystems.tiles.BlockEntityStorageBay;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

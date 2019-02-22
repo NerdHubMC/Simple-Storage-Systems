@@ -1,4 +1,4 @@
-package nerdhub.simplestoragesystems.tiles.components;
+package nerdhub.simplestoragesystems.tiles;
 
 import abused_master.abusedlib.tiles.BlockEntityBase;
 import nerdhub.simplestoragesystems.api.item.CustomStorageStack;

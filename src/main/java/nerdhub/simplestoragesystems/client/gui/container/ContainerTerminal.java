@@ -1,6 +1,5 @@
 package nerdhub.simplestoragesystems.client.gui.container;
 
-import nerdhub.simplestoragesystems.tiles.components.BlockEntityTerminal;
 import net.minecraft.container.Container;
 import net.minecraft.container.Slot;
 import net.minecraft.container.SlotActionType;
@@ -13,13 +12,11 @@ public class ContainerTerminal extends Container {
 
     public final PlayerInventory playerInventory;
     public final World world;
-    public final BlockEntityTerminal terminal;
 
-    public ContainerTerminal(int syncId, PlayerInventory playerInventory, BlockEntityTerminal terminal) {
+    public ContainerTerminal(int syncId, PlayerInventory playerInventory) {
         super(null, syncId);
         this.playerInventory = playerInventory;
         this.world = playerInventory.player.world;
-        this.terminal = terminal;
 
         //Vanilla Player Slots
         int i;

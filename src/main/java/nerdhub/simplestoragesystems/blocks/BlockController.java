@@ -1,9 +1,9 @@
-package nerdhub.simplestoragesystems.blocks.components;
+package nerdhub.simplestoragesystems.blocks;
 
 import abused_master.abusedlib.blocks.BlockWithEntityBase;
 import nerdhub.simplestoragesystems.SimpleStorageSystems;
 import nerdhub.simplestoragesystems.client.gui.gui.GuiController;
-import nerdhub.simplestoragesystems.tiles.components.BlockEntityController;
+import nerdhub.simplestoragesystems.tiles.BlockEntityController;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;

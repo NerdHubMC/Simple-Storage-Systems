@@ -2,10 +2,10 @@ package nerdhub.simplestoragesystems.registry;
 
 import abused_master.abusedlib.registry.RegistryHelper;
 import nerdhub.simplestoragesystems.SimpleStorageSystems;
-import nerdhub.simplestoragesystems.blocks.components.BlockController;
-import nerdhub.simplestoragesystems.blocks.components.BlockStorageBay;
-import nerdhub.simplestoragesystems.blocks.components.BlockTerminal;
-import nerdhub.simplestoragesystems.blocks.components.BlockWirelessPoint;
+import nerdhub.simplestoragesystems.blocks.BlockController;
+import nerdhub.simplestoragesystems.blocks.BlockStorageBay;
+import nerdhub.simplestoragesystems.blocks.BlockTerminal;
+import nerdhub.simplestoragesystems.blocks.BlockWirelessPoint;
 
 public class ModBlocks {
 

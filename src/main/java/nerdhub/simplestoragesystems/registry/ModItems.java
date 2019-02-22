@@ -12,7 +12,6 @@ public class ModItems {
 
     public static void registerItems() {
         RegistryHelper.registerItem(SimpleStorageSystems.MODID, LINKER);
-        RegistryHelper.registerItem(SimpleStorageSystems.MODID, LINKER);
 
         for (EnumCircuits circuit : EnumCircuits.values()) {
             RegistryHelper.registerItem(SimpleStorageSystems.MODID, circuit.getItem());

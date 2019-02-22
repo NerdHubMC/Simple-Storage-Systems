@@ -1,13 +1,13 @@
 package nerdhub.simplestoragesystems;
 
-import abused_master.abusedlib.blocks.multipart.impl.MultipartHostRenderer;
-import abused_master.abusedlib.tiles.BlockEntityMultipart;
 import abused_master.abusedlib.utils.Config;
+import nerdhub.simplestoragesystems.client.render.WirelessPointRenderer;
 import nerdhub.simplestoragesystems.network.ModPackets;
 import nerdhub.simplestoragesystems.registry.ModBlockEntities;
 import nerdhub.simplestoragesystems.registry.ModBlocks;
 import nerdhub.simplestoragesystems.registry.ModItems;
 import nerdhub.simplestoragesystems.registry.ModRecipes;
+import nerdhub.simplestoragesystems.tiles.BlockEntityWirelessPoint;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
@@ -16,13 +16,10 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 
-import java.util.logging.Logger;
-
 public class SimpleStorageSystems implements ModInitializer, ClientModInitializer {
 
     public static final String MODID = "simplestoragesystems";
     public static final ItemGroup modItemGroup = FabricItemGroupBuilder.build(new Identifier(MODID, MODID), () -> new ItemStack(ModBlocks.STORAGE_BAY));
-    public static Logger LOGGER = Logger.getLogger("SimpleStorageSystems");
     public static Config config = new Config(MODID, SimpleStorageSystems.class, true);
 
     @Override
@@ -40,6 +37,6 @@ public class SimpleStorageSystems implements ModInitializer, ClientModInitialize
         ModBlockEntities.registerClientGUIs();
         ModPackets.registerClientPackets();
 
-        BlockEntityRendererRegistry.INSTANCE.register(BlockEntityMultipart.class, new MultipartHostRenderer());
+        BlockEntityRendererRegistry.INSTANCE.register(BlockEntityWirelessPoint.class, new WirelessPointRenderer());
     }
 }

@@ -2,7 +2,7 @@ package nerdhub.simplestoragesystems.client.gui.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import nerdhub.simplestoragesystems.SimpleStorageSystems;
-import nerdhub.simplestoragesystems.tiles.components.BlockEntityController;
+import nerdhub.simplestoragesystems.tiles.BlockEntityController;
 import net.minecraft.client.gui.Screen;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.util.Identifier;

@@ -3,7 +3,7 @@ package nerdhub.simplestoragesystems.client.gui.gui;
 import com.mojang.blaze3d.platform.GlStateManager;
 import nerdhub.simplestoragesystems.SimpleStorageSystems;
 import nerdhub.simplestoragesystems.client.gui.container.ContainerStorageBay;
-import nerdhub.simplestoragesystems.tiles.components.BlockEntityStorageBay;
+import nerdhub.simplestoragesystems.tiles.BlockEntityStorageBay;
 import net.minecraft.text.TranslatableTextComponent;
 import net.minecraft.util.Identifier;
 
@@ -26,7 +26,7 @@ public class GuiStorageBay extends ContainerGuiBase {
     public void draw(int var1, int var2, float var3) {
         this.drawBackground();
         super.draw(var1, var2, var3);
-        this.drawMousoverTooltip(var1, var2);
+        this.drawMouseoverTooltip(var1, var2);
     }
 
     @Override
