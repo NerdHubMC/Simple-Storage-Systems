@@ -1,7 +1,7 @@
 package nerdhub.simplestoragesystems.tiles;
 
 import abused_master.abusedlib.blocks.multipart.IMultipart;
-import abused_master.abusedlib.blocks.multipart.MultipartHelper;
+import abused_master.abusedlib.utils.MultipartHelper;
 import abused_master.abusedlib.tiles.BlockEntityBase;
 import com.google.common.collect.Maps;
 import nerdhub.simplestoragesystems.api.network.EnumComponentTypes;

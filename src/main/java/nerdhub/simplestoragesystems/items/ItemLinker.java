@@ -4,7 +4,7 @@ import abused_master.abusedlib.items.ItemBase;
 import nerdhub.simplestoragesystems.SimpleStorageSystems;
 import nerdhub.simplestoragesystems.api.network.ILinkerComponent;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.item.TooltipOptions;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
@@ -51,7 +51,7 @@ public class ItemLinker extends ItemBase {
             return ActionResult.SUCCESS;
         }
 
-        return ActionResult.FAILURE;
+        return ActionResult.FAIL;
     }
 
     @Override
@@ -71,7 +71,7 @@ public class ItemLinker extends ItemBase {
     }
 
     @Override
-    public void buildTooltip(ItemStack stack, @Nullable World world, List<TextComponent> list, TooltipOptions tooltipOptions) {
+    public void buildTooltip(ItemStack stack, @Nullable World world, List<TextComponent> list, TooltipContext tooltipOptions) {
         CompoundTag tag = stack.getTag();
         if(tag != null) {
             if(tag.containsKey("wirelessPointPos")) {

@@ -41,7 +41,7 @@ public class GuiTerminal extends ContainerGuiBase {
     @Override
     protected void onInitialized() {
         super.onInitialized();
-        this.searchBar = new TextFieldWidget(0, fontRenderer, left + 62, top + 10, 106, 12);
+        this.searchBar = new TextFieldWidget(fontRenderer, left + 62, top + 10, 106, 12);
         this.searchBar.setMaxLength(50);
         this.searchBar.setHasBorder(false);
         this.searchBar.setVisible(true);
@@ -112,7 +112,7 @@ public class GuiTerminal extends ContainerGuiBase {
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         client.getTextureManager().bindTexture(terminalGui);
         drawTexturedRect(left, top, 0, 0, containerWidth, containerHeight);
-        this.searchBar.render(i, i1, v);
+        this.searchBar.draw(i, i1, v);
 
         if (scrollbar != null) {
             GlStateManager.color4f(1.0f, 1.0f, 1.0f, 1.0f);

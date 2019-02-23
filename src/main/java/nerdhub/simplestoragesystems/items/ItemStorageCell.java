@@ -2,7 +2,7 @@ package nerdhub.simplestoragesystems.items;
 
 import abused_master.abusedlib.items.ItemBase;
 import nerdhub.simplestoragesystems.SimpleStorageSystems;
-import net.minecraft.client.item.TooltipOptions;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.StringTextComponent;
 import net.minecraft.text.TextComponent;
@@ -25,7 +25,7 @@ public class ItemStorageCell extends ItemBase {
     }
 
     @Override
-    public void buildTooltip(ItemStack stack, @Nullable World world, List<TextComponent> list, TooltipOptions tooltipOptions) {
+    public void buildTooltip(ItemStack stack, @Nullable World world, List<TextComponent> list, TooltipContext tooltipOptions) {
         int dataUsed = stack.getTag() == null ? 0 : stack.getTag().getInt("amount");
         list.add(new StringTextComponent("Data Used: " + dataUsed + " / " + type.getStorageCapacity() + " bytes"));
     }
