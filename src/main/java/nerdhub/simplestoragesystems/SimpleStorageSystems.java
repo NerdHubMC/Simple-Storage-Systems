@@ -6,7 +6,6 @@ import nerdhub.simplestoragesystems.network.ModPackets;
 import nerdhub.simplestoragesystems.registry.ModBlockEntities;
 import nerdhub.simplestoragesystems.registry.ModBlocks;
 import nerdhub.simplestoragesystems.registry.ModItems;
-import nerdhub.simplestoragesystems.registry.ModRecipes;
 import nerdhub.simplestoragesystems.tiles.BlockEntityWirelessPoint;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;
@@ -28,7 +27,6 @@ public class SimpleStorageSystems implements ModInitializer, ClientModInitialize
         ModItems.registerItems();
         ModBlockEntities.registerBlockEntities();
         ModBlockEntities.registerServerGUIs();
-        ModRecipes.registerRecipes();
         ModPackets.registerPackets();
     }
 

@@ -65,8 +65,8 @@ public class ModPackets {
                         }
 
                         ((BlockEntityController) blockEntity).extractFromSystem(stack, extractionAmount);
-                        ((ServerPlayerEntity) context.getPlayer()).networkHandler.sendPacket(new CustomPayloadS2CPacket(PACKET_UPDATE_CURSOR, new PacketByteBuf(Unpooled.buffer()).writeItemStack(new ItemStack(stack.getItem(), extractionAmount))));
                         context.getPlayer().inventory.setCursorStack(new ItemStack(stack.getItem(), extractionAmount));
+                        ((ServerPlayerEntity) context.getPlayer()).networkHandler.sendPacket(new CustomPayloadS2CPacket(PACKET_UPDATE_CURSOR, new PacketByteBuf(Unpooled.buffer()).writeItemStack(new ItemStack(stack.getItem(), extractionAmount))));
                     }
                 });
             }

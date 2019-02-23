@@ -3,6 +3,7 @@
   "package": "nerdhub.simplestoragesystems.mixins",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "MixinRecipeManager"
   ],
   "injectors": {
     "defaultRequire": 1

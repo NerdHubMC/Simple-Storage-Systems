@@ -9,11 +9,9 @@ import net.minecraft.item.Items;
 
 public class ModRecipes {
 
-    //Storage Cells
-
-    public static void registerRecipes() {
-        new RecipeGenerator($ -> {
-            $.createShaped(new ItemStack(ModBlocks.CONTROLLER), null, new RecipeGenerator.ShapedParser("SDS", "C", "SDS", 'S', Blocks.STONE, 'D', EnumCircuits.DIAMOND_CIRCUIT.getItem(), 'C', Blocks.CHEST));
+    public static RecipeGenerator registerRecipes() {
+        RecipeGenerator generator = new  RecipeGenerator($ -> {
+            $.createShaped(new ItemStack(ModBlocks.CONTROLLER), null, new RecipeGenerator.ShapedParser("SDS", " C ", "SDS", 'S', Blocks.STONE, 'D', EnumCircuits.DIAMOND_CIRCUIT.getItem(), 'C', Blocks.CHEST));
             $.createShaped(new ItemStack(ModBlocks.STORAGE_BAY), null, new RecipeGenerator.ShapedParser("IRI", "CGC", "IRI", 'I', Items.IRON_INGOT, 'R', Items.REDSTONE, 'C', Blocks.CHEST, 'G', EnumCircuits.GOLD_CIRCUIT.getItem()));
             $.createShaped(new ItemStack(ModBlocks.WIRELESS_POINT), null, new RecipeGenerator.ShapedParser(" R ", "RIR", " R ", 'R', Items.REDSTONE, 'I', EnumCircuits.IRON_CIRCUIT.getItem()));
             $.createShaped(new ItemStack(ModBlocks.TERMINAL), null, new RecipeGenerator.ShapedParser("OGO", "GDG", "OGO", 'O', Blocks.OBSIDIAN, 'G', Blocks.GLASS, 'D', EnumCircuits.DIAMOND_CIRCUIT.getItem()));
@@ -26,10 +24,13 @@ public class ModRecipes {
             $.createShaped(new ItemStack(EnumStorageCells.STORAGE_CELL_64.getItem()), null, new RecipeGenerator.ShapedParser("GSG", "SCS", "DSD", 'G', Blocks.GLASS, 'S', EnumStorageCells.STORAGE_CELL_16.getItem(), 'C', EnumCircuits.DIAMOND_CIRCUIT.getItem(), 'D', Items.DIAMOND));
 
             //Circuit Recipes, Temporary -> Make into a Circuit Press
-           $.createShaped(new ItemStack(EnumCircuits.CIRCUIT_FRAME.getItem()), null, new RecipeGenerator.ShapedParser(" I ", "IRI", " I ", 'I', Items.IRON_INGOT, 'R', Items.REDSTONE));
+           $.createShaped(new ItemStack(EnumCircuits.CIRCUIT_FRAME.getItem()), null, new RecipeGenerator.ShapedParser(" I ", "I I", " I ", 'I', Items.IRON_INGOT));
            $.createShapeless(new ItemStack(EnumCircuits.IRON_CIRCUIT.getItem()), null, new RecipeGenerator.ShapelessParser(new ItemStack(EnumCircuits.CIRCUIT_FRAME.getItem()), new ItemStack(Items.IRON_INGOT)));
            $.createShapeless(new ItemStack(EnumCircuits.GOLD_CIRCUIT.getItem()), null, new RecipeGenerator.ShapelessParser(new ItemStack(EnumCircuits.CIRCUIT_FRAME.getItem()), new ItemStack(Items.GOLD_INGOT)));
            $.createShapeless(new ItemStack(EnumCircuits.DIAMOND_CIRCUIT.getItem()), null, new RecipeGenerator.ShapelessParser(new ItemStack(EnumCircuits.CIRCUIT_FRAME.getItem()), new ItemStack(Items.DIAMOND)));
         });
+
+        generator.accept();
+        return generator;
     }
 }

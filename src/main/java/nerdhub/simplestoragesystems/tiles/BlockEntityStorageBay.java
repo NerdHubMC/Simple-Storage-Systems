@@ -104,23 +104,19 @@ public class BlockEntityStorageBay extends BlockEntityBase implements SidedInven
                 ItemStack storedStack = ItemStack.fromTag((CompoundTag) tag);
                 if (storedStack.getItem() == stack.getItem()) {
                     it.remove();
-                    if (storedStack.getAmount() >= amount) {
+                    if (storedStack.getAmount() > amount) {
                         extracted = amount;
-                        if (storedStack.getAmount() > amount) {
-                            dataList.add(new ItemStack(storedStack.getItem(), storedStack.getAmount() - amount).toTag(new CompoundTag()));
-                        }
+                        dataList.add(new ItemStack(storedStack.getItem(), storedStack.getAmount() - amount).toTag(new CompoundTag()));
                     } else {
                         extracted = storedStack.getAmount();
                     }
                 }
 
-                if (extracted >= amount) {
-                    compoundTag.put("data", dataList);
-                    cellStack.setTag(compoundTag);
-                    inventory.set(i, cellStack);
-                    this.cacheStoredItems();
-                    return extracted;
-                }
+                compoundTag.put("data", dataList);
+                cellStack.setTag(compoundTag);
+                inventory.set(i, cellStack);
+                this.cacheStoredItems();
+                return extracted;
             }
         }
 
