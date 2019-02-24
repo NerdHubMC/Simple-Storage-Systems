@@ -11,6 +11,8 @@ import nerdhub.simplestoragesystems.client.gui.container.ContainerTerminal;
 import nerdhub.simplestoragesystems.network.ModPackets;
 import nerdhub.simplestoragesystems.utils.gui.Scrollbar;
 import nerdhub.simplestoragesystems.utils.gui.TerminalDisplayHandler;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.container.Slot;
@@ -21,6 +23,7 @@ import net.minecraft.text.TranslatableTextComponent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 
+@Environment(EnvType.CLIENT)
 public class GuiTerminal extends ContainerGuiBase {
 
     public Identifier terminalGui = new Identifier(SimpleStorageSystems.MODID, "textures/gui/terminal_gui.png");

@@ -3,11 +3,14 @@ package nerdhub.simplestoragesystems.client.gui.gui;
 import com.mojang.blaze3d.platform.GlStateManager;
 import nerdhub.simplestoragesystems.SimpleStorageSystems;
 import nerdhub.simplestoragesystems.tiles.BlockEntityController;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.Screen;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
+@Environment(EnvType.CLIENT)
 public class GuiController extends Screen {
 
     public Identifier controllerGui = new Identifier(SimpleStorageSystems.MODID, "textures/gui/controller_gui.png");

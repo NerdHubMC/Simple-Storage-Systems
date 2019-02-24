@@ -15,11 +15,11 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 
-public class SimpleStorageSystems implements ModInitializer, ClientModInitializer {
+public class SimpleStorageSystems implements ModInitializer {
 
     public static final String MODID = "simplestoragesystems";
     public static final ItemGroup modItemGroup = FabricItemGroupBuilder.build(new Identifier(MODID, MODID), () -> new ItemStack(ModBlocks.STORAGE_BAY));
-    public static Config config = new Config(MODID, SimpleStorageSystems.class, true);
+    public static Config config = new Config(MODID, SimpleStorageSystems.class);
 
     @Override
     public void onInitialize() {
@@ -28,13 +28,5 @@ public class SimpleStorageSystems implements ModInitializer, ClientModInitialize
         ModBlockEntities.registerBlockEntities();
         ModBlockEntities.registerServerGUIs();
         ModPackets.registerPackets();
-    }
-
-    @Override
-    public void onInitializeClient() {
-        ModBlockEntities.registerClientGUIs();
-        ModPackets.registerClientPackets();
-
-        BlockEntityRendererRegistry.INSTANCE.register(BlockEntityWirelessPoint.class, new WirelessPointRenderer());
     }
 }

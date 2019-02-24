@@ -35,7 +35,7 @@ public class BlockController extends BlockWithEntityBase {
 
     @Override
     public boolean activate(BlockState blockState, World world, BlockPos blockPos, PlayerEntity player, Hand hand, BlockHitResult blockHitResult) {
-        if(!world.isClient) {
+        if(world.isClient) {
             MinecraftClient.getInstance().openScreen(new GuiController((BlockEntityController) world.getBlockEntity(blockPos)));
         }
 

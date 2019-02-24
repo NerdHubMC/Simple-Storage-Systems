@@ -1,6 +1,8 @@
 package nerdhub.simplestoragesystems.client.gui.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.ContainerScreen;
 import net.minecraft.client.render.GuiLighting;
 import net.minecraft.container.Container;
@@ -8,6 +10,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.TextComponent;
 
+@Environment(EnvType.CLIENT)
 public abstract class ContainerGuiBase extends ContainerScreen {
 
     public ContainerGuiBase(Container container, PlayerInventory playerInventory, TextComponent textComponent) {

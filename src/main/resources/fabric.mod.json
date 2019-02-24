@@ -5,7 +5,8 @@
   "version": "1.0.0",
   "side": "universal",
   "initializers": [
-    "nerdhub.simplestoragesystems.SimpleStorageSystems"
+    "nerdhub.simplestoragesystems.SimpleStorageSystems",
+    "nerdhub.simplestoragesystems.SimpleStorageSystemsClient"
   ],
   "requires": {
     "fabric": "*",

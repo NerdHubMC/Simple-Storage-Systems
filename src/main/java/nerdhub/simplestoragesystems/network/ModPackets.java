@@ -89,8 +89,4 @@ public class ModPackets {
             }
         }));
     }
-
-    public static void registerClientPackets() {
-        ClientSidePacketRegistry.INSTANCE.register(PACKET_UPDATE_CURSOR, ((context, packetByteBuf) -> context.getPlayer().inventory.setCursorStack(packetByteBuf.readItemStack())));
-    }
 }
