@@ -8,13 +8,13 @@ import nerdhub.simplestoragesystems.tiles.BlockEntityWirelessPoint;
 import nerdhub.simplestoragesystems.utils.ComponentHelper;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.EntityContext;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.VerticalEntityPosition;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.block.BlockItem;
 import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.Hand;
@@ -75,10 +75,10 @@ public class BlockWirelessPoint extends BlockWithEntityBase {
     }
 
     @Override
-    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos pos2) {
+    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos pos2, boolean boolean_1) {
         ComponentHelper.linkComponents(world, pos);
 
-        super.neighborUpdate(state, world, pos, block, pos2);
+        super.neighborUpdate(state, world, pos, block, pos2, boolean_1);
     }
 
     @Override
@@ -130,7 +130,7 @@ public class BlockWirelessPoint extends BlockWithEntityBase {
 
     @Override
     protected void appendProperties(StateFactory.Builder<Block, BlockState> stateBuilder) {
-        super.appendProperties(stateBuilder.with(PROPS));
+        super.appendProperties(stateBuilder.add(PROPS));
     }
 
     @Override
@@ -144,8 +144,8 @@ public class BlockWirelessPoint extends BlockWithEntityBase {
     }
 
     @Override
-    public boolean skipRenderingSide(BlockState blockState_1, BlockState blockState_2, Direction direction_1) {
-        return blockState_1.getBlock() == this ? true : super.skipRenderingSide(blockState_1, blockState_2, direction_1);
+    public boolean isSideInvisible(BlockState blockState_1, BlockState blockState_2, Direction direction_1) {
+        return blockState_1.getBlock() == this ? true : super.isSideInvisible(blockState_1, blockState_2, direction_1);
     }
 
     @Override
@@ -159,7 +159,7 @@ public class BlockWirelessPoint extends BlockWithEntityBase {
     }
 
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, VerticalEntityPosition verticalEntityPosition) {
+    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, EntityContext verticalEntityPosition) {
         if(view.getBlockEntity(pos) instanceof BlockEntityWirelessPoint) {
             BlockEntityWirelessPoint point = (BlockEntityWirelessPoint) view.getBlockEntity(pos);
 

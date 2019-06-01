@@ -25,10 +25,10 @@ public class ModBlockEntities {
     public static final Identifier TERMINAL_CONTAINER = new Identifier(SimpleStorageSystems.MODID, "terminal_container");
 
     public static void registerBlockEntities() {
-        CONTROLLER = RegistryHelper.registerTile(new Identifier(SimpleStorageSystems.MODID, "controller"), BlockEntityController.class);
-        STORAGE_BAY = RegistryHelper.registerTile(new Identifier(SimpleStorageSystems.MODID, "storage_bay"), BlockEntityStorageBay.class);
-        TERMINAL = RegistryHelper.registerTile(new Identifier(SimpleStorageSystems.MODID, "terminal"), BlockEntityTerminal.class);
-        WIRELESS_POINT = RegistryHelper.registerTile(new Identifier(SimpleStorageSystems.MODID, "wireless_point"), BlockEntityWirelessPoint.class);
+        CONTROLLER = RegistryHelper.registerTile(new Identifier(SimpleStorageSystems.MODID, "controller"), BlockEntityController.class, ModBlocks.CONTROLLER);
+        STORAGE_BAY = RegistryHelper.registerTile(new Identifier(SimpleStorageSystems.MODID, "storage_bay"), BlockEntityStorageBay.class, ModBlocks.STORAGE_BAY);
+        TERMINAL = RegistryHelper.registerTile(new Identifier(SimpleStorageSystems.MODID, "terminal"), BlockEntityTerminal.class, ModBlocks.TERMINAL);
+        WIRELESS_POINT = RegistryHelper.registerTile(new Identifier(SimpleStorageSystems.MODID, "wireless_point"), BlockEntityWirelessPoint.class, ModBlocks.WIRELESS_POINT);
     }
 
     public static void registerServerGUIs() {

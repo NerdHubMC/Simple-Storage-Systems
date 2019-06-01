@@ -14,7 +14,7 @@ import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.util.Hand;
-import net.minecraft.util.StringRepresentable;
+import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -50,7 +50,7 @@ public class BlockController extends BlockWithEntityBase {
 
     @Override
     protected void appendProperties(StateFactory.Builder<Block, BlockState> stateBuilder) {
-        super.appendProperties(stateBuilder.with(STATE));
+        super.appendProperties(stateBuilder.add(STATE));
     }
 
     @Override
@@ -64,7 +64,7 @@ public class BlockController extends BlockWithEntityBase {
         return new BlockEntityController();
     }
 
-    public enum ControllerState implements StringRepresentable {
+    public enum ControllerState implements StringIdentifiable {
         online,
         offline;
 

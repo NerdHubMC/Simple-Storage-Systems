@@ -4,8 +4,8 @@ import abused_master.abusedlib.items.ItemBase;
 import nerdhub.simplestoragesystems.SimpleStorageSystems;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.StringTextComponent;
-import net.minecraft.text.TextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -25,8 +25,8 @@ public class ItemStorageCell extends ItemBase {
     }
 
     @Override
-    public void buildTooltip(ItemStack stack, @Nullable World world, List<TextComponent> list, TooltipContext tooltipOptions) {
+    public void buildTooltip(ItemStack stack, @Nullable World world, List<Component> list, TooltipContext tooltipOptions) {
         int dataUsed = stack.getTag() == null ? 0 : stack.getTag().getInt("amount");
-        list.add(new StringTextComponent("Data Used: " + dataUsed + " / " + type.getStorageCapacity() + " bytes"));
+        list.add(new TextComponent("Data Used: " + dataUsed + " / " + type.getStorageCapacity() + " bytes"));
     }
 }

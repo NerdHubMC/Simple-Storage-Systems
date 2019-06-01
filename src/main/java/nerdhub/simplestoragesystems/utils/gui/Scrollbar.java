@@ -47,7 +47,7 @@ public class Scrollbar {
 
     public void draw(ContainerGuiBase gui) {
         MinecraftClient.getInstance().getTextureManager().bindTexture(TEXTURE);
-        gui.drawTexturedRect(gui.getLeft() + x, gui.getTop() + y + (int) Math.min(height - SCROLLER_HEIGHT, (float) offset / (float) maxOffset * (float) (height - SCROLLER_HEIGHT)), isEnabled() ? 232 : 244, 0, 12, 15);
+        gui.blit(gui.getLeft() + x, gui.getTop() + y + (int) Math.min(height - SCROLLER_HEIGHT, (float) offset / (float) maxOffset * (float) (height - SCROLLER_HEIGHT)), isEnabled() ? 232 : 244, 0, 12, 15);
     }
 
     public void update(ContainerGuiBase gui, int mouseX, int mouseY) {
@@ -55,7 +55,7 @@ public class Scrollbar {
             isScrolling = false;
             wasClicking = false;
         } else {
-            boolean down = MinecraftClient.getInstance().mouse.method_1608();
+            boolean down = MinecraftClient.getInstance().mouse.wasLeftButtonClicked();
 
             if (!wasClicking && down && gui.inBounds(x, y, width, height, mouseX, mouseY)) {
                 isScrolling = true;

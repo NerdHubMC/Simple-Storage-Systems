@@ -18,8 +18,8 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.container.Slot;
 import net.minecraft.container.SlotActionType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.network.packet.CustomPayloadC2SPacket;
-import net.minecraft.text.TranslatableTextComponent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 
@@ -34,7 +34,7 @@ public class GuiTerminal extends ContainerGuiBase {
     public TerminalDisplayHandler view;
 
     public GuiTerminal(INetworkComponent tile, ContainerTerminal container) {
-        super(container, container.playerInventory, new TranslatableTextComponent("gui.simplestoragesystems.terminal"));
+        super(container, container.playerInventory, new TranslatableComponent("gui.simplestoragesystems.terminal"));
         this.containerWidth = 194;
         this.containerHeight = 193;
         this.tile = tile;
@@ -42,14 +42,14 @@ public class GuiTerminal extends ContainerGuiBase {
     }
 
     @Override
-    protected void onInitialized() {
-        super.onInitialized();
-        this.searchBar = new TextFieldWidget(fontRenderer, left + 62, top + 10, 106, 12);
+    protected void init() {
+        super.init();
+        this.searchBar = new TextFieldWidget(font, left + 62, top + 10, 106, 12, "");
         this.searchBar.setMaxLength(50);
         this.searchBar.setHasBorder(false);
         this.searchBar.setVisible(true);
-        this.searchBar.method_1868(16777215);
-        this.listeners.add(this.searchBar);
+        this.searchBar.setEditableColor(16777215);
+        this.children.add(this.searchBar);
 
         this.scrollbar = new Scrollbar(174, getTopHeight(), 12, (4 * 18) - 2);
         updateScrollbar();
@@ -58,9 +58,9 @@ public class GuiTerminal extends ContainerGuiBase {
     }
 
     @Override
-    public void draw(int var1, int var2, float var3) {
-        this.drawBackground();
-        super.draw(var1, var2, var3);
+    public void render(int var1, int var2, float var3) {
+        this.renderBackground();
+        super.render(var1, var2, var3);
         this.drawMouseoverTooltip(var1, var2);
 
         if (scrollbar != null) {
@@ -70,7 +70,7 @@ public class GuiTerminal extends ContainerGuiBase {
 
     @Override
     public void drawForeground(int mouseX, int mouseY) {
-        this.fontRenderer.draw(this.name.getFormattedText(), 8, 10, 4210752);
+        this.font.draw(this.title.getFormattedText(), 8, 10, 4210752);
         int x = 8;
         int y = 26;
         int slot = scrollbar != null ? (scrollbar.getOffset() * 9) : 0;
@@ -85,17 +85,16 @@ public class GuiTerminal extends ContainerGuiBase {
 
                 GlStateManager.disableLighting();
                 GlStateManager.disableDepthTest();
-                zOffset = 190;
+                itemRenderer.zOffset = 190;
                 GlStateManager.colorMask(true, true, true, false);
-                drawGradientRect(x, y, x + 16, y + 16, color, color);
-                zOffset = 0;
+                blit(x, y, x + 16, y + 16, color, color);
+                itemRenderer.zOffset = 0;
                 GlStateManager.colorMask(true, true, true, true);
                 GlStateManager.enableLighting();
                 GlStateManager.enableDepthTest();
 
-                if(slot < view.stacks.size() && !view.stacks.get(slot).getStack().isEmpty() && this.client.player.inventory.getCursorStack().isEmpty()) {
-                    drawStackTooltip(view.stacks.get(slot).getStack(), mouseX, mouseY);
-
+                if(slot < view.stacks.size() && !view.stacks.get(slot).getStack().isEmpty() && this.minecraft.player.inventory.getCursorStack().isEmpty()) {
+                    renderTooltip(view.stacks.get(slot).getStack(), mouseX, mouseY);
                 }
             }
 
@@ -113,9 +112,9 @@ public class GuiTerminal extends ContainerGuiBase {
     @Override
     public void drawBackground(float v, int i, int i1) {
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        client.getTextureManager().bindTexture(terminalGui);
-        drawTexturedRect(left, top, 0, 0, containerWidth, containerHeight);
-        this.searchBar.draw(i, i1, v);
+        minecraft.getTextureManager().bindTexture(terminalGui);
+        blit(left, top, 0, 0, containerWidth, containerHeight);
+        this.searchBar.render(i, i1, v);
 
         if (scrollbar != null) {
             GlStateManager.color4f(1.0f, 1.0f, 1.0f, 1.0f);
@@ -124,8 +123,8 @@ public class GuiTerminal extends ContainerGuiBase {
     }
 
     @Override
-    public void update() {
-        super.update();
+    public void tick() {
+        super.tick();
         this.useEnergy(EnumUsageType.OPEN.getUsageAmount());
         if (searchBar != null) {
             searchBar.tick();
@@ -153,9 +152,9 @@ public class GuiTerminal extends ContainerGuiBase {
                             PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
                             buf.writeBlockPos(tile.getControllerEntity().getPos());
                             buf.writeItemStack(stack);
-                            MinecraftClient.getInstance().getNetworkHandler().getClientConnection().sendPacket(new CustomPayloadC2SPacket(ModPackets.PACKET_STORE_STACK, buf));
+                            MinecraftClient.getInstance().getNetworkHandler().getClientConnection().send(new CustomPayloadC2SPacket(ModPackets.PACKET_STORE_STACK, buf));
                             MinecraftClient.getInstance().player.inventory.setCursorStack(ItemStack.EMPTY);
-                            MinecraftClient.getInstance().player.containerPlayer.sendContentUpdates();
+                            MinecraftClient.getInstance().player.playerContainer.sendContentUpdates();
                         }
                     } else if (stack.isEmpty() && slot > -1 && slot < view.stacks.size() && !view.stacks.get(slot).getStack().isEmpty()) {
                         EnumExtractionType type = EnumExtractionType.NORMAL_EXTRACTION;
@@ -174,7 +173,7 @@ public class GuiTerminal extends ContainerGuiBase {
                             energyUsageAmount = EnumUsageType.EXTRACTION.getUsageAmount();
                         }
 
-                        if (isShiftPressed()) {
+                        if (hasShiftDown()) {
                             //Extract shift
                             type = EnumExtractionType.SHIFT_EXTRACTION;
                             energyUsageAmount = slotStack.getAmount() > 64 ? 64 * EnumUsageType.EXTRACTION.getUsageAmount() : slotStack.getAmount() * EnumUsageType.EXTRACTION.getUsageAmount();
@@ -190,8 +189,8 @@ public class GuiTerminal extends ContainerGuiBase {
                             buf.writeItemStack(slotStack.getStack());
                             buf.writeInt(slotStack.getAmount());
                             buf.writeInt(type.ordinal());
-                            MinecraftClient.getInstance().getNetworkHandler().getClientConnection().sendPacket(new CustomPayloadC2SPacket(ModPackets.PACKET_EXTRACT_STACK, buf));
-                            MinecraftClient.getInstance().player.containerPlayer.sendContentUpdates();
+                            MinecraftClient.getInstance().getNetworkHandler().getClientConnection().send(new CustomPayloadC2SPacket(ModPackets.PACKET_EXTRACT_STACK, buf));
+                            MinecraftClient.getInstance().player.playerContainer.sendContentUpdates();
                         }
                     }
                 }
@@ -219,7 +218,7 @@ public class GuiTerminal extends ContainerGuiBase {
                 MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(ModPackets.PACKET_USE_ENERGY, buf));
                 return true;
             } else {
-                this.close();
+                this.onClose();
                 return false;
             }
         }
@@ -228,7 +227,7 @@ public class GuiTerminal extends ContainerGuiBase {
     }
 
     @Override
-    public boolean mouseScrolled(double double_1) {
+    public boolean mouseScrolled(double double_1, double double_2, double double_3) {
         if (scrollbar != null && double_1 != 0) {
             scrollbar.wheel((int) double_1);
         }
@@ -245,9 +244,9 @@ public class GuiTerminal extends ContainerGuiBase {
     }
 
     @Override
-    public void onScaleChanged(MinecraftClient minecraftClient_1, int int_1, int int_2) {
+    public void resize(MinecraftClient minecraftClient_1, int int_1, int int_2) {
         String string_1 = this.searchBar.getText();
-        this.initialize(minecraftClient_1, int_1, int_2);
+        this.init(minecraftClient_1, int_1, int_2);
         this.searchBar.setText(string_1);
     }
 

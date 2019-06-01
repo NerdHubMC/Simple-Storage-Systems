@@ -10,8 +10,8 @@ import nerdhub.simplestoragesystems.utils.ComponentHelper;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.EntityContext;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.VerticalEntityPosition;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
@@ -19,9 +19,9 @@ import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.state.property.Property;
+import net.minecraft.util.BlockMirror;
+import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -69,7 +69,7 @@ public class BlockTerminal extends BlockWithEntityBase {
     }
 
     @Override
-    public VoxelShape getOutlineShape(BlockState blockState_1, BlockView blockView_1, BlockPos blockPos_1, VerticalEntityPosition verticalEntityPosition_1) {
+    public VoxelShape getOutlineShape(BlockState blockState_1, BlockView blockView_1, BlockPos blockPos_1, EntityContext verticalEntityPosition_1) {
         return getShapeFromDirection(blockState_1.get(FACING));
     }
 
@@ -98,18 +98,18 @@ public class BlockTerminal extends BlockWithEntityBase {
     }
 
     @Override
-    public BlockState rotate(BlockState blockState_1, Rotation rotation_1) {
+    public BlockState rotate(BlockState blockState_1, BlockRotation rotation_1) {
         return blockState_1.with(FACING, rotation_1.rotate(blockState_1.get(FACING)));
     }
 
     @Override
-    public BlockState mirror(BlockState blockState_1, Mirror mirror_1) {
+    public BlockState mirror(BlockState blockState_1, BlockMirror mirror_1) {
         return blockState_1.rotate(mirror_1.getRotation(blockState_1.get(FACING)));
     }
 
     @Override
     protected void appendProperties(StateFactory.Builder<Block, BlockState> stateFactory$Builder_1) {
-        stateFactory$Builder_1.with(new Property[]{FACING});
+        stateFactory$Builder_1.add(new Property[]{FACING});
     }
 
     @Override
@@ -123,8 +123,8 @@ public class BlockTerminal extends BlockWithEntityBase {
     }
 
     @Override
-    public boolean skipRenderingSide(BlockState blockState_1, BlockState blockState_2, Direction direction_1) {
-        return blockState_1.getBlock() == this ? true : super.skipRenderingSide(blockState_1, blockState_2, direction_1);
+    public boolean isSideInvisible(BlockState blockState_1, BlockState blockState_2, Direction direction_1) {
+        return blockState_1.getBlock() == this ? true : super.isSideInvisible(blockState_1, blockState_2, direction_1);
     }
 
     @Override

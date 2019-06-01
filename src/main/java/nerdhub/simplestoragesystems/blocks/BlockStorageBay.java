@@ -12,13 +12,13 @@ import net.minecraft.block.Material;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.sortme.ItemScatterer;
 import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Property;
+import net.minecraft.util.BlockMirror;
+import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
+import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
 
 public class BlockStorageBay extends BlockWithEntityBase {
 
-    public static final DirectionProperty FACING = HorizontalFacingBlock.field_11177;
+    public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
 
     public BlockStorageBay() {
         super("storage_bay", Material.STONE, 1.0f, SimpleStorageSystems.modItemGroup);
@@ -64,18 +64,18 @@ public class BlockStorageBay extends BlockWithEntityBase {
     }
 
     @Override
-    public BlockState rotate(BlockState blockState_1, Rotation rotation_1) {
+    public BlockState rotate(BlockState blockState_1, BlockRotation rotation_1) {
         return blockState_1.with(FACING, rotation_1.rotate(blockState_1.get(FACING)));
     }
 
     @Override
-    public BlockState mirror(BlockState blockState_1, Mirror mirror_1) {
+    public BlockState mirror(BlockState blockState_1, BlockMirror mirror_1) {
         return blockState_1.rotate(mirror_1.getRotation(blockState_1.get(FACING)));
     }
 
     @Override
     protected void appendProperties(StateFactory.Builder<Block, BlockState> stateFactory$Builder_1) {
-        stateFactory$Builder_1.with(new Property[]{FACING});
+        stateFactory$Builder_1.add(new Property[]{FACING});
     }
 
     @Nullable

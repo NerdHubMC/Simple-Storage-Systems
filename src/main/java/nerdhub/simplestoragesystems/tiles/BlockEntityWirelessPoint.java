@@ -14,7 +14,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.text.StringTextComponent;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.TagHelper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -148,6 +148,6 @@ public class BlockEntityWirelessPoint extends BlockEntityBase implements ILinker
         }
 
         tag.put("wirelessPointPos", TagHelper.serializeBlockPos(pos));
-        player.addChatMessage(new StringTextComponent("Saved component position!"), true);
+        player.addChatMessage(new TextComponent("Saved component position!"), true);
     }
 }

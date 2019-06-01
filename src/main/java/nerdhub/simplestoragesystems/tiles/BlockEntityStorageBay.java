@@ -9,13 +9,13 @@ import nerdhub.simplestoragesystems.items.ItemStorageCell;
 import nerdhub.simplestoragesystems.registry.ModBlockEntities;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.DefaultedList;
-import net.minecraft.util.InventoryUtil;
 import net.minecraft.util.TagHelper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -40,7 +40,7 @@ public class BlockEntityStorageBay extends BlockEntityBase implements SidedInven
     public void fromTag(CompoundTag tag) {
         super.fromTag(tag);
         inventory = DefaultedList.create(10, ItemStack.EMPTY);
-        InventoryUtil.deserialize(tag, this.inventory);
+        Inventories.fromTag(tag, this.inventory);
 
         if(tag.containsKey("controllerPos")) {
             controllerPos = TagHelper.deserializeBlockPos(tag.getCompound("controllerPos"));
@@ -50,7 +50,7 @@ public class BlockEntityStorageBay extends BlockEntityBase implements SidedInven
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
-        InventoryUtil.serialize(tag, this.inventory);
+        Inventories.toTag(tag, this.inventory);
 
         if(controllerPos != null) {
             tag.put("controllerPos", TagHelper.serializeBlockPos(controllerPos));
@@ -229,12 +229,12 @@ public class BlockEntityStorageBay extends BlockEntityBase implements SidedInven
 
     @Override
     public ItemStack takeInvStack(int i, int i1) {
-        return  InventoryUtil.splitStack(inventory, i, i1);
+        return  Inventories.splitStack(inventory, i, i1);
     }
 
     @Override
     public ItemStack removeInvStack(int i) {
-        return InventoryUtil.removeStack(inventory, i);
+        return Inventories.removeStack(inventory, i);
     }
 
     @Override

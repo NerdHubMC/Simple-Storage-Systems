@@ -5,8 +5,9 @@ import nerdhub.simplestoragesystems.SimpleStorageSystems;
 import nerdhub.simplestoragesystems.tiles.BlockEntityController;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.Screen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resource.language.I18n;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
@@ -17,37 +18,35 @@ public class GuiController extends Screen {
     public BlockEntityController tile;
     public int left, top;
     public int screenWidth, screenHeight;
-    public String name;
 
     public GuiController(BlockEntityController tile) {
-        super();
+        super(new TranslatableComponent("gui.simplestoragesystems.guicontroller"));
         this.tile = tile;
         this.screenWidth = 176;
         this.screenHeight = 129;
     }
 
     @Override
-    protected void onInitialized() {
-        super.onInitialized();
+    protected void init() {
+        super.init();
         this.left = (this.width - this.screenWidth) / 2;
         this.top = (this.height - this.screenHeight) / 2;
-        name = I18n.translate("gui.simplestoragesystems.guicontroller");
     }
 
     @Override
-    public void draw(int i, int i1, float var3) {
-        this.drawBackground();
-        super.draw(i, i1, var3);
+    public void render(int i, int i1, float var3) {
+        this.renderBackground();
+        super.render(i, i1, var3);
 
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        client.getTextureManager().bindTexture(controllerGui);
-        drawTexturedRect(left, top, 0, 0, screenWidth, screenHeight);
+        minecraft.getTextureManager().bindTexture(controllerGui);
+        blit(left, top, 0, 0, screenWidth, screenHeight);
 
         renderEnergy();
-        this.fontRenderer.draw(name, (float)(this.width / 2 - this.fontRenderer.getStringWidth(name) / 2), top + 3, 4210752);
+        this.font.draw(title.getFormattedText(), (float)(this.width / 2 - this.font.getStringWidth(title.getFormattedText()) / 2), top + 3, 4210752);
 
         if(this.isPointWithinBounds(10, 13, 16, 60, i, i1)) {
-            this.drawTooltip(tile.storage.getEnergyStored() + " / " + tile.storage.getEnergyCapacity() + " Energy", i, i1);
+            this.renderTooltip(tile.storage.getEnergyStored() + " / " + tile.storage.getCapacity() + " Energy", i, i1);
         }
     }
 
@@ -59,7 +58,7 @@ public class GuiController extends Screen {
     @Override
     public boolean keyPressed(int int_1, int int_2, int int_3) {
         if (int_1 == GLFW.GLFW_KEY_E) {
-            this.close();
+            this.onClose();
             return true;
         } else {
             return super.keyPressed(int_1, int_2, int_3);
@@ -69,8 +68,8 @@ public class GuiController extends Screen {
     public void renderEnergy() {
         if(this.tile.storage.getEnergyStored() > 0) {
             int k = 85;
-            int i = tile.storage.getEnergyStored() * k / tile.storage.getEnergyCapacity();
-            this.drawTexturedRect(left + 10, top + 71 - i, 178, 61 - i, 14, i);
+            int i = tile.storage.getEnergyStored() * k / tile.storage.getCapacity();
+            this.blit(left + 10, top + 71 - i, 178, 61 - i, 14, i);
         }
     }
 

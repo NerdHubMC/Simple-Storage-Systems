@@ -1,19 +1,31 @@
 {
-  "id": "simplestoragesystems",
-  "name": "Simple Storage Systems",
-  "description": "A storage system mod for fabric",
+  "schemaVersion": 1,
+  "id": "symplestoragesystems",
   "version": "1.0.0",
-  "side": "universal",
-  "initializers": [
-    "nerdhub.simplestoragesystems.SimpleStorageSystems",
-    "nerdhub.simplestoragesystems.SimpleStorageSystemsClient"
+  "name": "Simple Storasimplestoragesystemsge Systems",
+  "description": "A simple storage tech mod for fabric.",
+  "authors": [
+    "abused_master"
   ],
-  "requires": {
-    "fabric": "*",
-    "abusedlib": "*"
+  "contact": {
+    "homepage": "https://minecraft.curseforge.com/projects/Simple-Storage-Systems",
+    "sources": "https://github.com/NerdHubMC/Simple-Storage-Systems"
   },
-  "mixins": {
-    "client": "simplestoragesystems.client.json",
-    "common": "simplestoragesystems.common.json"
+  "license": "MIT",
+  "icon": "assets/simplestoragesystems/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "nerdhub.simplestoragesystems.SimpleStorageSystems"
+    ],
+    "client": [
+      "nerdhub.simplestoragesystems.SimpleStorageSystemsClient"
+    ]
+  },
+  "requires": {
+    "fabricloader": ">=0.4.0",
+    "fabric": "*",
+    "abusedlib": ">=1.1.1",
+    "cardinalenergy": ">=1.1.1"
   }
 }

@@ -6,7 +6,7 @@ import nerdhub.simplestoragesystems.client.gui.container.ContainerStorageBay;
 import nerdhub.simplestoragesystems.tiles.BlockEntityStorageBay;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.text.TranslatableTextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
@@ -16,31 +16,31 @@ public class GuiStorageBay extends ContainerGuiBase {
     public BlockEntityStorageBay tile;
 
     public GuiStorageBay(BlockEntityStorageBay tile, ContainerStorageBay container) {
-        super(container, container.playerInventory, new TranslatableTextComponent("gui.simplestoragesystems.storage_bay"));
+        super(container, container.playerInventory, new TranslatableComponent("gui.simplestoragesystems.storage_bay"));
         this.tile = tile;
     }
 
     @Override
-    protected void onInitialized() {
-        super.onInitialized();
+    protected void init() {
+        super.init();
     }
 
     @Override
-    public void draw(int var1, int var2, float var3) {
-        this.drawBackground();
-        super.draw(var1, var2, var3);
+    public void render(int var1, int var2, float var3) {
+        this.renderBackground();
+        super.render(var1, var2, var1);
         this.drawMouseoverTooltip(var1, var2);
     }
 
     @Override
     public void drawForeground(int int_1, int int_2) {
-        this.fontRenderer.draw(this.name.getFormattedText(), (float)(this.containerWidth / 2 - this.fontRenderer.getStringWidth(this.name.getFormattedText()) / 2), 6.0F, 4210752);
+        this.font.draw(this.title.getFormattedText(), (float)(this.containerWidth / 2 - this.font.getStringWidth(this.title.getFormattedText()) / 2), 6.0F, 4210752);
     }
 
     @Override
     public void drawBackground(float v, int i, int i1) {
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        client.getTextureManager().bindTexture(storageBayGui);
-        drawTexturedRect(left, top, 0, 0, containerWidth, containerHeight);
+        minecraft.getTextureManager().bindTexture(storageBayGui);
+        blit(left, top, 0, 0, containerWidth, containerHeight);
     }
 }

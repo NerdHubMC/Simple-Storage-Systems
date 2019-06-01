@@ -1,8 +1,8 @@
 package nerdhub.simplestoragesystems.tiles;
 
-import abused_master.abusedlib.energy.EnergyStorage;
-import abused_master.abusedlib.energy.IEnergyReceiver;
-import abused_master.abusedlib.tiles.BlockEntityEnergyBase;
+import abused_master.abusedlib.tiles.BlockEntityBase;
+import nerdhub.cardinalenergy.api.IEnergyHandler;
+import nerdhub.cardinalenergy.impl.EnergyStorage;
 import nerdhub.simplestoragesystems.SimpleStorageSystems;
 import nerdhub.simplestoragesystems.api.item.ICustomStorageStack;
 import nerdhub.simplestoragesystems.api.network.EnumComponentTypes;
@@ -15,14 +15,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.text.StringTextComponent;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.TagHelper;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BlockEntityController extends BlockEntityEnergyBase implements IEnergyReceiver, ILinkerComponent, INetworkComponent {
+public class BlockEntityController extends BlockEntityBase implements IEnergyHandler, ILinkerComponent, INetworkComponent {
 
     public EnergyStorage storage = new EnergyStorage(100000);
     public List<BlockPos> storageBayPositions = new ArrayList<>();
@@ -36,7 +36,7 @@ public class BlockEntityController extends BlockEntityEnergyBase implements IEne
     @Override
     public void fromTag(CompoundTag tag) {
         super.fromTag(tag);
-        storage.readFromNBT(tag);
+        storage.readEnergyFromTag(tag);
 
         if(tag.containsKey("storageBayPositions")) {
             storageBayPositions.clear();
@@ -66,7 +66,7 @@ public class BlockEntityController extends BlockEntityEnergyBase implements IEne
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
-        storage.writeEnergyToNBT(tag);
+        storage.writeEnergyToTag(tag);
 
         if(storageBayPositions.size() > 0) {
             ListTag tags = new ListTag();
@@ -100,7 +100,7 @@ public class BlockEntityController extends BlockEntityEnergyBase implements IEne
 
     @Override
     public void tick() {
-        this.receiveEnergy(1000);
+        storage.receiveEnergy(1000);
 
         int energyUsage = (terminalPositions.size() + storageBayPositions.size()) * SimpleStorageSystems.config.getInt("controller-idle");
         if(energyUsage > 0 && storage.getEnergyStored() >= energyUsage) {
@@ -217,16 +217,6 @@ public class BlockEntityController extends BlockEntityEnergyBase implements IEne
     }
 
     @Override
-    public boolean receiveEnergy(int amount) {
-        return handleEnergyReceive(storage, amount);
-    }
-
-    @Override
-    public EnergyStorage getEnergyStorage() {
-        return storage;
-    }
-
-    @Override
     public void link(PlayerEntity player, CompoundTag tag) {
         if(tag.containsKey("wirelessPointPos")) {
             BlockPos componentPos = TagHelper.deserializeBlockPos(tag.getCompound("wirelessPointPos"));
@@ -235,12 +225,12 @@ public class BlockEntityController extends BlockEntityEnergyBase implements IEne
                 this.wirelessPointPositions.add(componentPos);
                 point.setControllerPos(pos);
 
-                player.addChatMessage(new StringTextComponent("Successfully linked component!"), true);
+                player.addChatMessage(new TextComponent("Successfully linked component!"), true);
             }else {
-                player.addChatMessage(new StringTextComponent("Component is already linked!"), true);
+                player.addChatMessage(new TextComponent("Component is already linked!"), true);
             }
         }else {
-            player.addChatMessage(new StringTextComponent("Linker does not contain component positions!"), true);
+            player.addChatMessage(new TextComponent("Linker does not contain component positions!"), true);
         }
 
         this.updateEntity();
