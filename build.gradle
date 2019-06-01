@@ -15,19 +15,24 @@ minecraft {
 
 repositories {
 	jcenter()
-    maven { url = "https://jitpack.io/" }
+	maven { url = "https://maven.abusedmaster.xyz/" }
 	maven { url = "https://oss.sonatype.org/content/repositories/releases/" }
-	//maven { url = "https://maven.abusedmaster.xyz/" }
 }
 
 dependencies {
 	minecraft "com.mojang:minecraft:${mc_version}"
 	mappings "net.fabricmc:yarn:${yarn_mappings}"
 	modCompile "net.fabricmc:fabric-loader:${loader_version}"
-	modCompile "net.fabricmc:fabric:${fabric_version}"
+	modCompile "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 
 	modCompile "abused_master.abusedlib:AbusedLib:${abusedlib_version}"
-    compileOnly "com.google.code.findbugs:jsr305:${findbugs_version}"
+	include "abused_master.abusedlib:AbusedLib:${abusedlib_version}"
+	modCompile "com.github.NerdHubMC:Cardinal-Energy:${cardinal_version}"
+	include "com.github.NerdHubMC:Cardinal-Energy:${cardinal_version}"
+	modCompile "com.github.NerdHubMC:Cardinal-Components-API:${cardinal_components}"
+	include "com.github.NerdHubMC:Cardinal-Components-API:${cardinal_components}"
+	
+	compileOnly "com.google.code.findbugs:jsr305:${findbugs_version}"
 }
 
 jar {
@@ -53,7 +58,9 @@ artifacts {
 publishing {
 	publications {
 		mavenJava(MavenPublication) {
-			artifact jar
+			afterEvaluate {
+				artifact remapJar.output
+			}
 			artifact sourcesJar
 			pom {
 				name = "SimpleStorageSystems"
